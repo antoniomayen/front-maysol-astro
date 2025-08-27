@@ -1,0 +1,163 @@
+---
+import { getProducts } from '../../lib/strapi';
+import ProductCard from '../ui/ProductCard.astro';
+
+// Get products with "Top 10" in short_description for homepage
+let topProducts = [];
+try {
+  const response = await getProducts({
+    filters: {
+      short_description: {
+        $eq: 'Top 10'
+      },
+      available: {
+        $eq: true
+      }
+    },
+    populate: '*',
+    sort: 'createdAt:desc',
+    pagination: {
+      pageSize: 8
+    }
+  });
+  topProducts = response.data;
+} catch (error) {
+  console.error('Error fetching top products:', error);
+}
+---
+
+<div class="w-full bg-white">
+  <section class="py-16 max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Section Header -->
+    <div class="text-center mb-12">
+      <h2 class="text-3xl lg:text-4xl font-bold mb-4">
+        Productos Destacados
+      </h2>
+      <p class="text-lg text-gray-600 max-w-2xl mx-auto mb-6">
+        Descubre nuestros productos más populares seleccionados especialmente para impulsar tu producción
+      </p>
+      <div class="divider divider-primary w-24 mx-auto"></div>
+    </div>
+
+    {topProducts.length > 0 ? (
+      <>
+        <!-- Products Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-12">
+          {topProducts.map((product) => (
+            <ProductCard 
+              product={product} 
+              class="h-full"
+            />
+          ))}
+        </div>
+
+        <!-- Call to Action -->
+        <div class="text-center">
+          <a 
+            href="/productos" 
+            class="btn btn-primary btn-lg"
+          >
+            Ver Todos los Productos
+            <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+            </svg>
+          </a>
+        </div>
+      </>
+    ) : (
+      <!-- Empty State -->
+      <div class="text-center py-12">
+        <div class="max-w-md mx-auto">
+          <svg class="w-16 h-16 mx-auto text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2 2v-5m16 0h-2M4 13h2m13-8V4a1 1 0 00-1-1H7a1 1 0 00-1 1v1m8 0V4.5"></path>
+          </svg>
+          <h3 class="text-xl font-semibold text-gray-600 mb-2">
+            Productos próximamente
+          </h3>
+          <p class="text-gray-500 mb-6">
+            Estamos preparando nuestro catálogo de productos destacados
+          </p>
+          <button id="empty-state-whatsapp" class="btn btn-success">
+            <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.1.824z"/>
+            </svg>
+            Consultar Disponibilidad
+          </button>
+        </div>
+      </div>
+    )}
+
+    <!-- Categories Preview -->
+    <div class="mt-16 pt-12 border-t border-gray-200">
+      <h3 class="text-2xl font-bold text-center mb-8">Nuestras Categorías</h3>
+      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+        <div class="text-center p-4 rounded-lg hover:bg-primary/5 transition-colors cursor-pointer">
+          <div class="w-12 h-12 mx-auto mb-2 bg-orange-100 rounded-full flex items-center justify-center">
+            <span class="text-2xl">🥚</span>
+          </div>
+          <span class="text-sm font-medium">Huevos</span>
+        </div>
+        <div class="text-center p-4 rounded-lg hover:bg-primary/5 transition-colors cursor-pointer">
+          <div class="w-12 h-12 mx-auto mb-2 bg-orange-100 rounded-full flex items-center justify-center">
+            <span class="text-2xl">🐔</span>
+          </div>
+          <span class="text-sm font-medium">Gallinas</span>
+        </div>
+        <div class="text-center p-4 rounded-lg hover:bg-primary/5 transition-colors cursor-pointer">
+          <div class="w-12 h-12 mx-auto mb-2 bg-orange-100 rounded-full flex items-center justify-center">
+            <span class="text-2xl">🐓</span>
+          </div>
+          <span class="text-sm font-medium">Pollos</span>
+        </div>
+        <div class="text-center p-4 rounded-lg hover:bg-primary/5 transition-colors cursor-pointer">
+          <div class="w-12 h-12 mx-auto mb-2 bg-orange-100 rounded-full flex items-center justify-center">
+            <span class="text-2xl">🐷</span>
+          </div>
+          <span class="text-sm font-medium">Cerdos</span>
+        </div>
+        <div class="text-center p-4 rounded-lg hover:bg-primary/5 transition-colors cursor-pointer">
+          <div class="w-12 h-12 mx-auto mb-2 bg-orange-100 rounded-full flex items-center justify-center">
+            <span class="text-2xl">🌾</span>
+          </div>
+          <span class="text-sm font-medium">Alimentos</span>
+        </div>
+        <div class="text-center p-4 rounded-lg hover:bg-primary/5 transition-colors cursor-pointer">
+          <div class="w-12 h-12 mx-auto mb-2 bg-orange-100 rounded-full flex items-center justify-center">
+            <span class="text-2xl">🔧</span>
+          </div>
+          <span class="text-sm font-medium">Accesorios</span>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+  // WhatsApp trigger for empty state
+  document.getElementById('empty-state-whatsapp')?.addEventListener('click', () => {
+    const modal = document.getElementById('whatsapp-modal') as HTMLDialogElement;
+    if (modal) {
+      // Pre-fill message for general inquiry
+      const messageTextarea = modal.querySelector('textarea[name="message"]') as HTMLTextAreaElement;
+      if (messageTextarea) {
+        messageTextarea.value = 'Me interesa conocer qué productos tienen disponibles actualmente.';
+      }
+      
+      modal.showModal();
+      document.body.style.overflow = 'hidden';
+    }
+  });
+
+  // Category click handlers
+  document.addEventListener('DOMContentLoaded', () => {
+    const categoryCards = document.querySelectorAll('[data-category]');
+    categoryCards.forEach(card => {
+      card.addEventListener('click', () => {
+        const category = card.getAttribute('data-category');
+        if (category) {
+          window.location.href = `/productos?categoria=${category}`;
+        }
+      });
+    });
+  });
+</script>

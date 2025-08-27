@@ -1,0 +1,79 @@
+---
+import '../styles/global.css';
+
+export interface Props {
+  title: string;
+  description?: string;
+  image?: string;
+  keywords?: string;
+  ogTitle?: string;
+  ogDescription?: string;
+}
+
+const { 
+  title, 
+  description = 'Granjas Maysol - Expertos en producción avícola y porcina. Proveedores directos y asesores especializados para productores del occidente Guatemala.',
+  image = '/images/logo_maysol-nobg.webp',
+  keywords,
+  ogTitle,
+  ogDescription
+} = Astro.props;
+
+const finalOgTitle = ogTitle || `${title} | Granjas Maysol`;
+const finalOgDescription = ogDescription || description;
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+---
+
+<!doctype html>
+<html lang="es" data-theme="maysol">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content={description} />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <meta name="generator" content={Astro.generator} />
+    
+    <!-- SEO Meta Tags -->
+    <title>{title} | Granjas Maysol</title>
+    <link rel="canonical" href={canonicalURL} />
+    {keywords && <meta name="keywords" content={keywords} />}
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:title" content={finalOgTitle} />
+    <meta property="og:description" content={finalOgDescription} />
+    <meta property="og:image" content={image} />
+    <meta property="og:locale" content="es_GT" />
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content={canonicalURL} />
+    <meta property="twitter:title" content={finalOgTitle} />
+    <meta property="twitter:description" content={finalOgDescription} />
+    <meta property="twitter:image" content={image} />
+    
+    <!-- WhatsApp -->
+    <meta property="og:site_name" content="Granjas Maysol" />
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  </head>
+  <body class="min-h-screen bg-base-100 font-sans">
+    <slot />
+  </body>
+</html>
+
+<style is:global>
+  html {
+    font-family: 'Inter', system-ui, sans-serif;
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    margin: 0;
+  }
+</style>

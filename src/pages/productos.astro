@@ -1,0 +1,248 @@
+s---
+import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/layout/Navbar.astro';
+import ProductCard from '../components/ui/ProductCard.astro';
+import WhatsAppModal from '../components/ui/WhatsAppModal.astro';
+import FloatingWhatsAppButton from '../components/ui/FloatingWhatsAppButton.astro';
+import { getProducts, type Product } from '../lib/strapi';
+
+// Get page parameters
+const url = Astro.url;
+const pageParam = url.searchParams.get('page') || '1';
+const pageSizeParam = url.searchParams.get('size') || '10';
+
+// Parse and validate parameters
+const currentPage = Math.max(1, parseInt(pageParam));
+const pageSize = [10, 25, 50].includes(parseInt(pageSizeParam)) ? parseInt(pageSizeParam) : 10;
+
+// Fetch products with pagination
+let products: Product[] = [];
+let pagination = { page: 1, pageCount: 1, total: 0 };
+
+try {
+  const response = await getProducts({
+    filters: {
+      available: {
+        $eq: true
+      }
+    },
+    populate: '*',
+    sort: ['featured:desc', 'createdAt:desc'],
+    pagination: {
+      page: currentPage,
+      pageSize: pageSize
+    }
+  });
+  
+  products = response.data;
+  pagination = response.meta.pagination || { page: 1, pageCount: 1, total: 0 };
+} catch (error) {
+  console.error('Error fetching products:', error);
+}
+
+// Generate page numbers for pagination
+const generatePageNumbers = (current: number, total: number) => {
+  const pages: (number | string)[] = [];
+  const delta = 2; // Show 2 pages before and after current
+  
+  // Always show first page
+  if (current > delta + 1) {
+    pages.push(1);
+    if (current > delta + 2) pages.push('...');
+  }
+  
+  // Show pages around current
+  for (let i = Math.max(1, current - delta); i <= Math.min(total, current + delta); i++) {
+    pages.push(i);
+  }
+  
+  // Always show last page
+  if (current < total - delta) {
+    if (current < total - delta - 1) pages.push('...');
+    pages.push(total);
+  }
+  
+  return pages;
+};
+
+const pageNumbers = generatePageNumbers(currentPage, pagination.pageCount);
+
+// Helper function to build URL with parameters
+const buildPageUrl = (page: number, size: number = pageSize) => {
+  const params = new URLSearchParams();
+  params.set('page', page.toString());
+  params.set('size', size.toString());
+  return `/productos?${params.toString()}`;
+};
+
+export const prerender = false;
+---
+
+<Layout 
+  title="Productos" 
+  description="Catálogo completo de productos avícolas y porcinos de Granjas Maysol. Gallinas, pollos, cerdos, huevos, alimentos y accesorios de la más alta calidad."
+>
+  <Navbar />
+  
+  <main class="min-h-screen bg-base-100">
+    <!-- Breadcrumbs -->
+    <div class="bg-base-200 py-4">
+      <div class="container-global">
+        <div class="breadcrumbs text-sm">
+          <ul>
+            <li><a href="/">Inicio</a></li>
+            <li class="font-semibold">Productos</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Header -->
+    <section class="py-12">
+      <div class="container-global">
+        <div class="text-center mb-8">
+          <h1 class="text-3xl lg:text-4xl font-bold mb-4">
+            Nuestros Productos
+          </h1>
+          <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+            Explora nuestro catálogo completo de productos de alta calidad para tu producción avícola y porcina
+          </p>
+        </div>
+
+        <!-- Results info and page size selector -->
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+          <div class="text-sm text-gray-600">
+            Mostrando {products.length > 0 ? ((currentPage - 1) * pageSize + 1) : 0} - {Math.min(currentPage * pageSize, pagination.total)} de {pagination.total} productos
+          </div>
+          
+          <div class="flex items-center gap-2">
+            <span class="text-sm text-gray-600">Mostrar:</span>
+            <select 
+              class="select select-bordered select-sm"
+              id="page-size-selector"
+              value={pageSize}
+            >
+              <option value="10" selected={pageSize === 10}>10</option>
+              <option value="25" selected={pageSize === 25}>25</option>
+              <option value="50" selected={pageSize === 50}>50</option>
+            </select>
+            <span class="text-sm text-gray-600">por página</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Products Grid -->
+    <section class="pb-12">
+      <div class="container-global">
+        {products.length > 0 ? (
+          <>
+            <!-- Products Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6 mb-12">
+              {products.map((product) => (
+                <ProductCard 
+                  product={product} 
+                  class="h-full"
+                />
+              ))}
+            </div>
+
+            <!-- Pagination -->
+            {pagination.pageCount > 1 && (
+              <div class="flex flex-col items-center gap-4">
+                <div class="join">
+                  <!-- Previous button -->
+                  <a 
+                    href={currentPage > 1 ? buildPageUrl(currentPage - 1) : '#'}
+                    class={`join-item btn ${currentPage <= 1 ? 'btn-disabled' : ''}`}
+                    aria-label="Página anterior"
+                  >
+                    «
+                  </a>
+
+                  <!-- Page numbers -->
+                  {pageNumbers.map((pageNum) => (
+                    pageNum === '...' ? (
+                      <button class="join-item btn btn-disabled">...</button>
+                    ) : (
+                      <a 
+                        href={buildPageUrl(pageNum as number)}
+                        class={`join-item btn ${currentPage === pageNum ? 'btn-active' : ''}`}
+                        aria-label={`Página ${pageNum}`}
+                      >
+                        {pageNum}
+                      </a>
+                    )
+                  ))}
+
+                  <!-- Next button -->
+                  <a 
+                    href={currentPage < pagination.pageCount ? buildPageUrl(currentPage + 1) : '#'}
+                    class={`join-item btn ${currentPage >= pagination.pageCount ? 'btn-disabled' : ''}`}
+                    aria-label="Página siguiente"
+                  >
+                    »
+                  </a>
+                </div>
+
+                <!-- Page info -->
+                <div class="text-sm text-gray-500">
+                  Página {currentPage} de {pagination.pageCount}
+                </div>
+              </div>
+            )}
+          </>
+        ) : (
+          <!-- Empty State -->
+          <div class="text-center py-20">
+            <div class="max-w-md mx-auto">
+              <svg class="w-20 h-20 mx-auto text-gray-400 mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2 2v-5m16 0h-2M4 13h2m13-8V4a1 1 0 00-1-1H7a1 1 0 00-1 1v1m8 0V4.5"></path>
+              </svg>
+              <h2 class="text-2xl font-bold text-gray-600 mb-4">
+                No se encontraron productos
+              </h2>
+              <p class="text-gray-500 mb-8">
+                Actualmente no tenemos productos disponibles en nuestro catálogo. Contáctanos para conocer nuestras opciones.
+              </p>
+              <button id="empty-catalog-whatsapp" class="btn btn-success btn-lg">
+                <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.1.824z"/>
+                </svg>
+                Consultar Productos Disponibles
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+    </section>
+  </main>
+
+  <!-- WhatsApp Components -->
+  <WhatsAppModal />
+  <FloatingWhatsAppButton />
+</Layout>
+
+<script>
+  // Page size selector handler
+  document.getElementById('page-size-selector')?.addEventListener('change', (e) => {
+    const select = e.target as HTMLSelectElement;
+    const newSize = select.value;
+    const url = new URL(window.location.href);
+    url.searchParams.set('size', newSize);
+    url.searchParams.set('page', '1'); // Reset to first page
+    window.location.href = url.toString();
+  });
+
+  // Empty state WhatsApp trigger
+  document.getElementById('empty-catalog-whatsapp')?.addEventListener('click', () => {
+    const modal = document.getElementById('whatsapp-modal') as HTMLDialogElement;
+    if (modal) {
+      const messageTextarea = modal.querySelector('textarea[name="message"]') as HTMLTextAreaElement;
+      if (messageTextarea) {
+        messageTextarea.value = 'Me gustaría conocer qué productos tienen disponibles actualmente en su catálogo.';
+      }
+      modal.showModal();
+    }
+  });
+</script>

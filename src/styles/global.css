@@ -1,0 +1,194 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* 🎨 Colores base de Granjas Maysol */
+    --primary-color: #da3414;
+    --secondary-color: #fb540c;
+    --accent: #e84118;
+    --light: #f8f9fa;
+    --dark: #2d3436;
+    --muted: #b2bec3;
+    --success: #20bf6b;
+    --warning: #f7b731;
+    --card-bg: #ffffff;
+    --section-bg: #f5f7f9;
+
+    /* shadcn/ui variables personalizadas para Granjas Maysol */
+    --background: 0 0% 100%;           /* white background */
+    --foreground: 210 6% 21%;          /* dark text (#2d3436) */
+    
+    --primary: 9 85% 46%;              /* primary color (#da3414) */
+    --primary-foreground: 0 0% 100%;   /* white text on primary */
+    
+    --secondary: 18 100% 52%;          /* secondary color (#fb540c) */
+    --secondary-foreground: 0 0% 100%; /* white text on secondary */
+    
+    --muted: 210 16% 82%;              /* muted (#b2bec3) */
+    --muted-foreground: 210 6% 21%;    /* dark text */
+    
+    --accent: 12 88% 51%;              /* accent (#e84118) */
+    --accent-foreground: 0 0% 100%;    /* white text on accent */
+    
+    --destructive: 0 84% 37%;
+    --destructive-foreground: 0 0% 100%;
+    
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 9 85% 46%;
+    
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --primary: 9 85% 46%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 18 100% 52%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 12 88% 51%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 9 85% 46%;
+  }
+
+  body {
+    background-color: white;
+    color: #2d3436;
+    font-family: 'Inter', 'Open Sans', sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    color: #2d3436;
+  }
+
+  h1 { font-size: 2.25rem; }
+  h2 { font-size: 1.875rem; }
+  h3 { font-size: 1.5rem; }
+  h4 { font-size: 1.25rem; }
+  h5 { font-size: 1.125rem; }
+  h6 { font-size: 1rem; }
+
+  p {
+    margin-bottom: 1rem;
+    color: #b2bec3;
+    font-size: 16px;
+    line-height: 24px;
+  }
+}
+
+@layer components {
+  /* 📏 CONTAINER GLOBAL - Ancho máximo para pantallas ultra wide */
+  .container-global {
+    @apply w-full max-w-[1600px] mx-auto;
+  }
+
+  /* 📏 CONTAINER FIXED - Para elementos con position fixed que necesiten límite */
+  .container-fixed-limit {
+    @apply w-full max-w-[1600px] mx-auto;
+  }
+
+  /* 📱 FLOATING BUTTON - Posicionado respecto al límite de 1600px */
+  .floating-button-container {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    width: 100%;
+    max-width: 1600px;
+    margin: 0 auto;
+    pointer-events: none;
+    z-index: 50;
+    /* Centrar el contenedor en pantallas ultra wide */
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .floating-button-container button {
+    pointer-events: auto;
+  }
+
+  .bg-navbar-gradient {
+    background: linear-gradient(to right, #da3414, #c12e0e);
+  }
+
+  .bg-btn-gradient {
+    background: linear-gradient(135deg, rgb(255, 128, 103) 0%, rgb(218, 52, 20) 100%);
+  }
+
+  .bg-btn-hover-gradient {
+    background: linear-gradient(135deg, rgb(252, 87, 55) 0%, rgb(197, 45, 16) 100%);
+  }
+
+  .text-primary-maysol { color: #da3414; }
+  .text-secondary-maysol { color: #fb540c; }
+  .text-muted-maysol { color: #b2bec3; }
+  .bg-section-bg { background-color: #f5f7f9; }
+
+  .shadow-navbar {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  .shadow-card {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Navbar items específicos */
+  .navbar-item-desktop {
+    @apply flex flex-col items-center justify-center text-center text-white;
+    @apply px-3 lg:px-5 py-3 lg:py-4 h-full;
+    @apply transition-all duration-300 ease-in-out;
+    @apply hover:bg-orange-500 hover:text-black;
+    @apply focus:outline-none focus:bg-orange-500 focus:text-black;
+  }
+
+  .navbar-item-special {
+    @apply text-black bg-white/10;
+    @apply hover:bg-orange-500 hover:text-white;
+  }
+}
+
+/* Floating button animation */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+.float-animation {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Navbar backdrop blur support */
+.backdrop-blur-md {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-gray-100;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-primary rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-[#c12e0e];
+}

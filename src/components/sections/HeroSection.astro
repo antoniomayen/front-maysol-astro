@@ -1,0 +1,104 @@
+---
+// src/components/sections/HeroSection.astro - Modern design inspired by Next.js version
+import ActionButton from '../ui/ActionButton.astro';
+---
+
+<!-- 🎯 Hero Section Container - Max Width 1600px -->
+<div class="w-full bg-white">
+  <section id="hero-section" class="relative mx-auto max-w-[1600px] h-screen overflow-hidden md:h-[85vh] lg:h-[650px]">
+    
+    <!-- Image Placeholder - Loads immediately -->
+    <img 
+      src="/images/hero_top_img.webp" 
+      alt="Granjas Maysol Hero Background"
+      loading="eager"
+      class="absolute inset-0 w-full h-full object-cover"
+    />
+    
+    <!-- Video Background - Lazy loaded after image -->
+    <video 
+      id="hero-video"
+      playsinline 
+      autoplay 
+      muted 
+      loop
+      preload="none"
+      poster="/images/hero_top_img.webp"
+      class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-1000"
+    >
+      <source src="/video/video_top.mp4" type="video/mp4" />
+    </video>
+    
+    <!-- Gradient Overlay - Better visibility on mobile -->
+    <div class="absolute inset-0 z-10 bg-gradient-to-b from-black/20 via-black/40 to-black/60"></div>
+    
+    <!-- Content Container - Mobile First Approach -->
+    <div class="relative z-20 flex h-full w-full items-center px-4 sm:px-6 lg:px-8">
+      <div class="w-full flex items-center min-h-full py-12 sm:py-16 lg:py-20">
+        <div class="text-center sm:text-left sm:max-w-xl lg:max-w-2xl">
+        
+        <!-- Logo - Responsive sizing -->
+        <div class="mx-auto mb-6 w-48 sm:mx-0 sm:w-64 lg:w-80">
+          <img
+            src="/images/logo_maysol-nobg.webp"
+            alt="Granjas Maysol Logo"
+            width="320"
+            height="160"
+            class="h-auto w-full drop-shadow-2xl"
+          />
+        </div>
+        
+        <!-- Main Title - Mobile first typography -->
+        <h1 class="mb-4 text-2xl font-bold text-white drop-shadow-lg sm:text-3xl md:text-4xl lg:text-5xl">
+          Expertos en producción
+          <span class="block mt-1">avícola y porcina</span>
+        </h1>
+        
+        <!-- Subtitle - Better readability on mobile -->
+        <p class="mb-8 text-base font-medium text-gray-100 drop-shadow-md sm:text-lg md:text-xl lg:text-2xl">
+          Proveedores directos y asesores especializados
+          <span class="block sm:inline"> para productores del occidente</span>
+          <span class="block mt-1">Guatemala 🇬🇹</span>
+        </p>
+        
+        <!-- CTA Button - Touch friendly size -->
+        <div class="mt-2">
+          <ActionButton
+            text="Solicitar Información"
+            variant="outline"
+            class="inline-block min-w-[200px] text-base sm:text-lg"
+            id="hero-whatsapp-btn"
+          />
+        </div>
+        
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+  // Lazy load video and fade in when ready
+  const video = document.getElementById('hero-video') as HTMLVideoElement;
+  const img = document.querySelector('#hero-section img') as HTMLImageElement;
+  
+  if (video) {
+    // Start loading video after page load
+    window.addEventListener('load', () => {
+      video.load();
+      
+      // When video can play, fade it in
+      video.addEventListener('canplaythrough', () => {
+        video.classList.add('opacity-100');
+        video.classList.remove('opacity-0');
+        
+        // Hide image after video fades in
+        setTimeout(() => {
+          if (img) {
+            img.style.display = 'none';
+          }
+        }, 1000);
+      }, { once: true });
+    });
+  }
+</script>
