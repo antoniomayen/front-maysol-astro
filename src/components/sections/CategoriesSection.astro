@@ -1,0 +1,51 @@
+---
+import ActionButton from '../ui/ActionButton.astro';
+
+const categories = [
+  { name: 'Huevos', icon: '/icons/huevos.svg' },
+  { name: 'Gallinas', icon: '/icons/gallina.svg' },
+  { name: 'Cerdos', icon: '/icons/cerdo.svg' },
+  { name: 'Alimentos', icon: '/icons/alimentos.svg' },
+  { name: 'Maíz', icon: '/icons/maiz.svg' },
+  { name: 'Bovinos', icon: '/icons/bovinos.svg' }
+];
+---
+
+<div class="w-full bg-white">
+  <div class="w-full max-w-[1600px] mx-auto bg-black/95 backdrop-blur-md border-b border-orange-400/20">
+    <section class="py-4 px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col md:flex-row items-center gap-6">
+        <!-- Categories - 60% left on tablet/desktop, full width mobile -->
+        <div class="w-full md:w-3/5">
+          <div class="grid grid-cols-6 gap-2 sm:gap-4 justify-items-center">
+      {categories.map((category) => (
+        <div class="text-center p-1 sm:p-2 rounded-xl hover:scale-105 transition-all duration-300 group">
+          <div class="w-10 h-10 sm:w-12 sm:h-12 mx-auto mb-1 sm:mb-2 bg-white/10 backdrop-blur-md border border-orange-400/50 rounded-full flex items-center justify-center group-hover:bg-orange-500/10 group-hover:border-orange-400/70 transition-all duration-300 glow-orange">
+            <img 
+              src={category.icon} 
+              alt={category.name} 
+              class="w-6 h-6 transition-all duration-300"
+              style="filter: invert(46%) sepia(85%) saturate(2453%) hue-rotate(355deg) brightness(96%) contrast(97%);"
+            />
+          </div>
+          <span class="text-[10px] sm:text-xs font-medium text-white group-hover:text-orange-200 transition-colors duration-300">
+            {category.name}
+          </span>
+        </div>
+      ))}
+          </div>
+        </div>
+        
+        <!-- CTA Button - 40% right on tablet/desktop -->
+        <div class="w-full md:w-2/5 flex justify-center">
+          <ActionButton
+            text="Solicitar Información"
+            variant="outline"
+            class="inline-block min-w-[200px] text-base sm:text-lg"
+            id="hero-whatsapp-btn"
+          />
+        </div>
+      </div>
+    </section>
+  </div>
+</div>

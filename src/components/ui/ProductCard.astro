@@ -103,7 +103,7 @@ const getCategoryColor = (category?: string) => {
     
     <!-- 📄 Descripción corta -->
     {short_description && short_description !== "Top 10" && (
-      <p class="text-muted text-sm mb-4 line-clamp-2">
+      <p class="text-gray-600 text-sm mb-4 line-clamp-2">
         {short_description}
       </p>
     )}
@@ -115,7 +115,7 @@ const getCategoryColor = (category?: string) => {
           Q{price}
         </span>
         {unit && (
-          <span class="text-sm text-gray-500 ml-1">/ {unit}</span>
+          <span class="text-sm text-gray-600 ml-1">/ {unit}</span>
         )}
       </div>
     ) : (

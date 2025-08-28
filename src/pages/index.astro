@@ -2,6 +2,7 @@
 import Layout from '../layouts/Layout.astro';
 import Navbar from '../components/layout/Navbar.astro';
 import HeroSection from '../components/sections/HeroSection.astro';
+import CategoriesSection from '../components/sections/CategoriesSection.astro';
 import ProductsSection from '../components/sections/ProductsSection.astro';
 import WhatsAppModal from '../components/ui/WhatsAppModal.astro';
 import FloatingWhatsAppButton from '../components/ui/FloatingWhatsAppButton.astro';
@@ -10,9 +11,12 @@ export const prerender = false; // Change to false to fetch products
 ---
 
 <Layout title="Inicio">
-  <Navbar />
-  <main>
+  <main class="relative">
     <HeroSection />
+    <Navbar />
+    
+    <!-- Categories Section -->
+    <CategoriesSection /> 
     
     <!-- Featured Products Section -->
     <ProductsSection />
@@ -63,7 +67,7 @@ export const prerender = false; // Change to false to fetch products
   <script>
     // Additional trigger for contact section
     document.getElementById('contact-whatsapp')?.addEventListener('click', () => {
-      const modal = document.getElementById('whatsapp-modal');
+      const modal = document.getElementById('whatsapp-modal') as HTMLDialogElement;
       if (modal) {
         modal.showModal();
         document.body.style.overflow = 'hidden';

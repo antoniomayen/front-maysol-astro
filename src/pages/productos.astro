@@ -84,9 +84,9 @@ export const prerender = false;
 >
   <Navbar />
   
-  <main class="min-h-screen bg-base-100">
+  <main class="min-h-screen bg-white">
     <!-- Breadcrumbs -->
-    <div class="bg-base-200 py-4">
+    <div class="bg-gray-50 py-4">
       <div class="container-global">
         <div class="breadcrumbs text-sm">
           <ul>
@@ -104,21 +104,21 @@ export const prerender = false;
           <h1 class="text-3xl lg:text-4xl font-bold mb-4">
             Nuestros Productos
           </h1>
-          <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+          <p class="text-lg text-gray-700 max-w-2xl mx-auto">
             Explora nuestro catálogo completo de productos de alta calidad para tu producción avícola y porcina
           </p>
         </div>
 
         <!-- Results info and page size selector -->
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
-          <div class="text-sm text-gray-600">
+          <div class="text-sm text-gray-700">
             Mostrando {products.length > 0 ? ((currentPage - 1) * pageSize + 1) : 0} - {Math.min(currentPage * pageSize, pagination.total)} de {pagination.total} productos
           </div>
           
           <div class="flex items-center gap-2">
-            <span class="text-sm text-gray-600">Mostrar:</span>
+            <span class="text-sm text-gray-700">Mostrar:</span>
             <select 
-              class="select select-bordered select-sm"
+              class="select select-bordered select-sm bg-white text-gray-700"
               id="page-size-selector"
               value={pageSize}
             >
@@ -126,7 +126,7 @@ export const prerender = false;
               <option value="25" selected={pageSize === 25}>25</option>
               <option value="50" selected={pageSize === 50}>50</option>
             </select>
-            <span class="text-sm text-gray-600">por página</span>
+            <span class="text-sm text-gray-700">por página</span>
           </div>
         </div>
       </div>
@@ -186,7 +186,7 @@ export const prerender = false;
                 </div>
 
                 <!-- Page info -->
-                <div class="text-sm text-gray-500">
+                <div class="text-sm text-gray-600">
                   Página {currentPage} de {pagination.pageCount}
                 </div>
               </div>
@@ -199,10 +199,10 @@ export const prerender = false;
               <svg class="w-20 h-20 mx-auto text-gray-400 mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2 2v-5m16 0h-2M4 13h2m13-8V4a1 1 0 00-1-1H7a1 1 0 00-1 1v1m8 0V4.5"></path>
               </svg>
-              <h2 class="text-2xl font-bold text-gray-600 mb-4">
+              <h2 class="text-2xl font-bold text-gray-800 mb-4">
                 No se encontraron productos
               </h2>
-              <p class="text-gray-500 mb-8">
+              <p class="text-gray-700 mb-8">
                 Actualmente no tenemos productos disponibles en nuestro catálogo. Contáctanos para conocer nuestras opciones.
               </p>
               <button id="empty-catalog-whatsapp" class="btn btn-success btn-lg">

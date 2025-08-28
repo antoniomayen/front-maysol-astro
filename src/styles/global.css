@@ -68,6 +68,10 @@
     line-height: 1.5;
   }
 
+  html {
+    scroll-behavior: smooth;
+  }
+
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Poppins', sans-serif;
     font-weight: 700;
@@ -83,7 +87,7 @@
 
   p {
     margin-bottom: 1rem;
-    color: #b2bec3;
+    color: #636e72;
     font-size: 16px;
     line-height: 24px;
   }
@@ -133,7 +137,7 @@
 
   .text-primary-maysol { color: #da3414; }
   .text-secondary-maysol { color: #fb540c; }
-  .text-muted-maysol { color: #b2bec3; }
+  .text-muted-maysol { color: #636e72; }
   .bg-section-bg { background-color: #f5f7f9; }
 
   .shadow-navbar {
@@ -191,4 +195,9 @@
 
 ::-webkit-scrollbar-thumb:hover {
   @apply bg-[#c12e0e];
+}
+
+/* Glow effect for orange elements */
+.glow-orange {
+  box-shadow: 0 0 30px rgba(251, 84, 12, 0.3), inset 0 0 20px rgba(255, 255, 255, 0.1);
 }
