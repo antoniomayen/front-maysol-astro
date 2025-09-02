@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Navbar from '../components/layout/Navbar.astro';
+import NavbarPages from '../components/layout/NavbarPages.astro';
 import HeroSection from '../components/sections/HeroSection.astro';
 import CategoriesSection from '../components/sections/CategoriesSection.astro';
 import ProductsSection from '../components/sections/ProductsSection.astro';
@@ -12,18 +13,22 @@ export const prerender = false; // Change to false to fetch products
 
 <Layout title="Inicio">
   <main class="relative">
-    <HeroSection />
-    <Navbar />
+    <!-- Hero and Categories sections with capsule navbar -->
+    <div class="relative">
+      <HeroSection />
+      <Navbar />
+      <CategoriesSection /> 
+    </div>
     
-    <!-- Categories Section -->
-    <CategoriesSection /> 
+    <!-- Rest of sections with full-width navbar -->
+    <NavbarPages />
     
     <!-- Featured Products Section -->
     <ProductsSection />
     
     <!-- Services Section -->
     <div class="w-full bg-white">
-      <section id="servicios" class="py-16 max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
+      <section id="servicios" class="py-16 container-global">
         <h2 class="text-3xl font-bold text-center mb-12">Nuestros Servicios</h2>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div class="card bg-white shadow-xl border border-gray-200">
@@ -50,7 +55,7 @@ export const prerender = false; // Change to false to fetch products
     
     <!-- Contact Section -->
     <div class="w-full bg-gray-50">
-      <section id="contacto" class="py-16 max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <section id="contacto" class="py-16 container-global text-center">
         <h2 class="text-3xl font-bold mb-8 text-dark">¿Listo para mejorar tu producción?</h2>
         <p class="text-xl mb-8 text-muted">Contáctanos hoy mismo y recibe asesoría personalizada</p>
         <button id="contact-whatsapp" class="bg-[#25d366] hover:bg-[#20bf55] text-white py-3 px-8 text-lg rounded-full font-bold transition-all duration-300 hover:transform hover:-translate-y-1">
@@ -72,6 +77,37 @@ export const prerender = false; // Change to false to fetch products
         modal.showModal();
         document.body.style.overflow = 'hidden';
       }
+    });
+
+    // Hide NavbarPages when Navbar capsule is active
+    document.addEventListener('DOMContentLoaded', () => {
+      const navbarPages = document.querySelector('.bg-navbar-pages-gradient')?.closest('.w-full.bg-white.sticky'); // NavbarPages container
+      const heroSection = document.getElementById('hero-section');
+      const categoriesSection = document.querySelector('[class*="bg-black/95"]'); // CategoriesSection
+      
+      if (!navbarPages || !heroSection) return;
+      
+      const handleScroll = () => {
+        const heroRect = heroSection.getBoundingClientRect();
+        const categoriesRect = categoriesSection?.getBoundingClientRect();
+        
+        // Check if we're in the hero/categories area
+        const isInHeroCategoriesArea = (
+          (heroRect.top <= 100 && heroRect.bottom >= -100) ||
+          (categoriesRect && categoriesRect.top <= 100 && categoriesRect.bottom >= -100)
+        );
+        
+        if (isInHeroCategoriesArea) {
+          // Hide NavbarPages when in hero/categories area
+          navbarPages.classList.add('hidden');
+        } else {
+          // Show NavbarPages when outside hero/categories area
+          navbarPages.classList.remove('hidden');
+        }
+      };
+      
+      window.addEventListener('scroll', handleScroll);
+      handleScroll(); // Initial check
     });
   </script>
 </Layout>

@@ -1,6 +1,6 @@
 ---
 import Layout from '../../layouts/Layout.astro';
-import Navbar from '../../components/layout/Navbar.astro';
+import NavbarPages from '../../components/layout/NavbarPages.astro';
 import WhatsAppModal from '../../components/ui/WhatsAppModal.astro';
 import FloatingWhatsAppButton from '../../components/ui/FloatingWhatsAppButton.astro';
 import { getProductBySlug, getStrapiMediaUrl, categoryLabels } from '../../lib/strapi';
@@ -67,7 +67,7 @@ export const prerender = false;
   ogTitle={ogTitle}
   ogDescription={ogDescription}
 >
-  <Navbar />
+  <NavbarPages />
   
   <main class="min-h-screen bg-white">
     <!-- Breadcrumbs -->

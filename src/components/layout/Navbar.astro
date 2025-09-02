@@ -26,7 +26,7 @@ const menuItems = [
       
       <!-- Center capsule: 8 columns -->
       <div class="col-span-8 flex justify-start lg:justify-start xl:justify-center">
-        <div class="backdrop-blur-md bg-black/30 border border-orange-400/50 rounded-full px-6 py-3 shadow-lg shadow-orange-400/20" style="box-shadow: 0 0 30px rgba(251, 84, 12, 0.3), inset 0 0 20px rgba(255, 255, 255, 0.1);">
+        <div class="backdrop-blur-md bg-black/30 border border-[#E75015]/50 rounded-full px-6 py-3 shadow-lg shadow-[#E75015]/20" style="box-shadow: 0 0 30px rgba(231, 80, 21, 0.3), inset 0 0 20px rgba(255, 255, 255, 0.1);">
           <div class="flex items-center space-x-4">
             {menuItems.map((item) => {
               const Icon = item.icon;
@@ -35,7 +35,7 @@ const menuItems = [
                   href={item.href}
                   class="group flex items-center space-x-2 text-white hover:text-orange-200 px-2 py-2 rounded-full transition-all duration-300 hover:scale-105 hover:bg-white/10"
                 >
-                  <Icon class="h-4 w-4 text-orange-400 group-hover:scale-110 transition-all duration-300" />
+                  <Icon class="h-4 w-4 text-[#E75015] group-hover:scale-110 transition-all duration-300" />
                   <span class="font-medium text-xs xl:text-sm">{item.text}</span>
                 </a>
               );
@@ -51,7 +51,7 @@ const menuItems = [
           href="https://www.facebook.com/granjasmaysolgt"
           target="_blank"
           rel="noopener noreferrer"
-          class="group flex items-center justify-center px-4 lg:px-6 py-3 lg:py-4 bg-[#1877f2]/80 backdrop-blur-md hover:bg-[#1877f2]/90 text-white rounded-full transition-all duration-300 hover:scale-110 shadow-lg border border-orange-400/50"
+          class="group flex items-center justify-center px-4 lg:px-6 py-3 lg:py-4 bg-[#1877f2]/80 backdrop-blur-md hover:bg-[#1877f2]/90 text-white rounded-full transition-all duration-300 hover:scale-110 shadow-lg border border-[#E75015]/50"
           aria-label="Facebook"
         >
           <Facebook class="h-4 lg:h-5 w-4 lg:w-5 text-white" />
@@ -60,7 +60,7 @@ const menuItems = [
         <!-- WhatsApp -->
         <button
           id="whatsapp-trigger"
-          class="group flex items-center justify-center px-4 lg:px-6 py-3 lg:py-4 bg-[#25d366]/80 backdrop-blur-md hover:bg-[#25d366]/90 text-white rounded-full transition-all duration-300 hover:scale-110 shadow-lg border border-orange-400/50"
+          class="group flex items-center justify-center px-4 lg:px-6 py-3 lg:py-4 bg-[#25d366]/80 backdrop-blur-md hover:bg-[#25d366]/90 text-white rounded-full transition-all duration-300 hover:scale-110 shadow-lg border border-[#E75015]/50"
           aria-label="WhatsApp"
         >
           <svg class="h-4 lg:h-5 w-4 lg:w-5 text-white" fill="white" viewBox="0 0 24 24">
@@ -88,7 +88,7 @@ const menuItems = [
     </div>
 
     <!-- 📱 MOBILE & TABLET MENU -->
-    <div id="mobile-menu" class="hidden lg:hidden border-t border-orange-300/20 py-4 space-y-2 backdrop-blur-md bg-black/40">
+    <div id="mobile-menu" class="hidden lg:hidden border-t border-[#E75015]/20 py-4 space-y-2 backdrop-blur-md bg-black/40">
       {menuItems.map((item) => {
         const Icon = item.icon;
         return (
@@ -184,50 +184,6 @@ const menuItems = [
     whatsAppTrigger?.addEventListener('click', openWhatsAppModal);
     mobileWhatsAppTrigger?.addEventListener('click', openWhatsAppModal);
     
-    // Navbar color change on scroll - only on homepage
-    if (window.location.pathname === '/') {
-      const navbar = document.querySelector('nav');
-      const navbarCapsule = navbar?.querySelector('.backdrop-blur-md');
-      const navLinks = navbarCapsule?.querySelectorAll('.group'); // Only links inside the capsule
-      
-      const handleScroll = () => {
-        const heroSection = document.getElementById('hero-section');
-        if (!heroSection) return;
-        
-        const heroRect = heroSection.getBoundingClientRect();
-        const isOutsideHero = heroRect.bottom <= 100; // 100px threshold
-        
-        if (isOutsideHero) {
-          // Outside hero - dark theme
-          navbarCapsule?.classList.remove('bg-black/30', 'border-orange-400/50');
-          navbarCapsule?.classList.add('bg-white/95', 'border-orange-400/30');
-          
-          navLinks?.forEach(link => {
-            link.classList.remove('text-white', 'hover:text-orange-200');
-            link.classList.add('text-gray-800', 'hover:text-orange-600');
-            
-            const icon = link.querySelector('svg');
-            icon?.classList.remove('text-orange-400');
-            icon?.classList.add('text-orange-500');
-          });
-        } else {
-          // Inside hero - light theme
-          navbarCapsule?.classList.remove('bg-white/95', 'border-orange-400/30');
-          navbarCapsule?.classList.add('bg-black/30', 'border-orange-400/50');
-          
-          navLinks?.forEach(link => {
-            link.classList.remove('text-gray-800', 'hover:text-orange-600');
-            link.classList.add('text-white', 'hover:text-orange-200');
-            
-            const icon = link.querySelector('svg');
-            icon?.classList.remove('text-orange-500');
-            icon?.classList.add('text-orange-400');
-          });
-        }
-      };
-      
-      window.addEventListener('scroll', handleScroll);
-      handleScroll(); // Initial check
-    }
+    // No scroll behavior - navbar maintains consistent orange gradient style
   });
 </script>

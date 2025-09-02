@@ -1,0 +1,210 @@
+---
+// src/components/layout/NavbarPages.astro - Full width navbar for non-home pages
+import { Home, Info, ShoppingCart, Truck, Calendar, MessageCircle, Menu, X, Facebook } from 'lucide-astro';
+
+// 🎯 Datos del menú
+const menuItems = [
+  { text: 'Granjas Maysol', href: '/', icon: Home },
+  { text: 'Nosotros', href: '/nosotros', icon: Info },
+  { text: 'Productos', href: '/#productos', icon: ShoppingCart },
+  { text: 'Servicios', href: '/#servicios', icon: Truck },
+  { text: 'Noticias', href: '/noticias', icon: Calendar },
+  { text: 'Contacto', href: '/#contacto', icon: MessageCircle }
+];
+---
+
+<!-- 🎨 Navbar full width para páginas internas -->
+<div class="w-full bg-white sticky top-0 z-50">
+  <div class="max-w-[1600px] mx-auto bg-navbar-pages-gradient border-b border-orange-400/30">
+    <nav class="w-full">
+    <div class="w-full px-4 sm:px-6 lg:px-8 py-3">
+      
+      <!-- DESKTOP Layout: Centered menu items -->
+      <div class="hidden lg:flex items-center justify-between h-14">
+        
+        <!-- Left: Logo -->
+        <div class="flex-1">
+          <a href="/" class="flex items-center">
+            <div class="w-32 h-32 flex items-center justify-center">
+              <img 
+                src="/images/logo_maysol-nobg.webp" 
+                alt="Maysol Logo" 
+                class="w-24 h-24 p-3 transition-all duration-300 hover:scale-110"
+                style="filter: brightness(0) saturate(100%) invert(100%);"
+              />
+            </div>
+          </a>
+        </div>
+        
+        <!-- Center: Menu items -->
+        <div class="flex items-center space-x-6">
+          {menuItems.map((item) => {
+            const Icon = item.icon;
+            return (
+              <a 
+                href={item.href}
+                class="group flex items-center space-x-2 text-white hover:text-orange-200 px-3 py-2 rounded-lg transition-all duration-300 hover:scale-105 hover:bg-white/10"
+              >
+                <Icon class="h-4 w-4 text-[#E75015] group-hover:scale-110 transition-all duration-300" />
+                <span class="font-medium text-sm">{item.text}</span>
+              </a>
+            );
+          })}
+        </div>
+        
+        <!-- Right: Social buttons -->
+        <div class="flex items-center space-x-3 flex-1 justify-end">
+          <!-- Facebook -->
+          <a
+            href="https://www.facebook.com/granjasmaysolgt"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="group flex items-center justify-center px-4 py-3 bg-[#1877f2]/80 backdrop-blur-md hover:bg-[#1877f2]/90 text-white rounded-full transition-all duration-300 hover:scale-110 shadow-lg border border-[#E75015]/50"
+            aria-label="Facebook"
+          >
+            <Facebook class="h-4 w-4 text-white" />
+          </a>
+
+          <!-- WhatsApp -->
+          <button
+            id="whatsapp-trigger-pages"
+            class="group flex items-center justify-center px-4 py-3 bg-[#25d366]/80 backdrop-blur-md hover:bg-[#25d366]/90 text-white rounded-full transition-all duration-300 hover:scale-110 shadow-lg border border-[#E75015]/50"
+            aria-label="WhatsApp"
+          >
+            <svg class="h-4 w-4 text-white" fill="white" viewBox="0 0 24 24">
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.785"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+      
+      <!-- MOBILE & TABLET Layout -->
+      <div class="flex lg:hidden items-center justify-between h-14">
+        
+        <!-- Logo/Brand -->
+        <div class="flex items-center">
+          <a href="/" class="flex items-center space-x-2">
+            <div class="w-24 h-24 flex items-center justify-center flex-shrink-0">
+              <img 
+                src="/images/logo_maysol-nobg.webp" 
+                alt="Maysol Logo" 
+                class="w-16 h-16 p-3"
+                style="filter: brightness(0) saturate(100%) invert(100%);"
+              />
+            </div>
+            <span class="text-white font-bold text-lg">Granjas Maysol</span>
+          </a>
+        </div>
+        
+        <!-- Mobile menu button -->
+        <div class="flex items-center space-x-3">
+          <!-- Social buttons mobile -->
+          <a
+            href="https://www.facebook.com/granjasmaysolgt"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="p-2 bg-[#1877f2]/80 text-white rounded-full"
+            aria-label="Facebook"
+          >
+            <Facebook class="h-4 w-4" />
+          </a>
+          
+          <button
+            id="whatsapp-trigger-mobile-pages"
+            class="p-2 bg-[#25d366]/80 text-white rounded-full"
+            aria-label="WhatsApp"
+          >
+            <svg class="h-4 w-4" fill="white" viewBox="0 0 24 24">
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.785"/>
+            </svg>
+          </button>
+          
+          <button 
+            id="mobile-menu-trigger-pages"
+            class="p-2 text-white hover:text-orange-200 hover:bg-white/10 rounded-lg transition-all duration-300"
+            aria-label="Abrir menú"
+          >
+            <Menu class="h-6 w-6" id="hamburger-icon-pages" />
+            <X class="h-6 w-6 hidden" id="close-icon-pages" />
+          </button>
+        </div>
+      </div>
+
+      <!-- Mobile menu -->
+      <div id="mobile-menu-pages" class="hidden lg:hidden border-t border-orange-400/20 mt-3 pt-4 space-y-2">
+        {menuItems.map((item) => {
+          const Icon = item.icon;
+          return (
+            <a 
+              href={item.href}
+              class="mobile-menu-item-pages flex items-center space-x-3 text-white hover:text-orange-200 hover:bg-white/10 px-4 py-3 rounded-lg transition-all duration-300"
+            >
+              <Icon class="h-5 w-5 text-[#E75015]" />
+              <span class="font-medium">{item.text}</span>
+            </a>
+          );
+        })}
+      </div>
+    </div>
+    </nav>
+  </div>
+</div>
+
+<script>
+  // Mobile menu functionality for pages navbar
+  document.addEventListener('DOMContentLoaded', () => {
+    const mobileMenuTrigger = document.getElementById('mobile-menu-trigger-pages');
+    const mobileMenu = document.getElementById('mobile-menu-pages');
+    const hamburgerIcon = document.getElementById('hamburger-icon-pages');
+    const closeIcon = document.getElementById('close-icon-pages');
+    const mobileMenuItems = document.querySelectorAll('.mobile-menu-item-pages');
+    const whatsAppTriggerDesktop = document.getElementById('whatsapp-trigger-pages');
+    const whatsAppTriggerMobile = document.getElementById('whatsapp-trigger-mobile-pages');
+    
+    let isMobileMenuOpen = false;
+    
+    // Toggle mobile menu
+    mobileMenuTrigger?.addEventListener('click', () => {
+      isMobileMenuOpen = !isMobileMenuOpen;
+      
+      if (isMobileMenuOpen) {
+        mobileMenu?.classList.remove('hidden');
+        hamburgerIcon?.classList.add('hidden');
+        closeIcon?.classList.remove('hidden');
+      } else {
+        mobileMenu?.classList.add('hidden');
+        hamburgerIcon?.classList.remove('hidden');
+        closeIcon?.classList.add('hidden');
+      }
+    });
+    
+    // Close mobile menu when clicking on a menu item
+    mobileMenuItems.forEach(item => {
+      item.addEventListener('click', () => {
+        isMobileMenuOpen = false;
+        mobileMenu?.classList.add('hidden');
+        hamburgerIcon?.classList.remove('hidden');
+        closeIcon?.classList.add('hidden');
+      });
+    });
+    
+    // WhatsApp trigger handlers
+    const openWhatsAppModal = () => {
+      const modal = document.getElementById('whatsapp-modal') as HTMLDialogElement;
+      if (modal) {
+        modal.showModal();
+        document.body.style.overflow = 'hidden';
+      }
+      // Close mobile menu if open
+      if (isMobileMenuOpen) {
+        isMobileMenuOpen = false;
+        mobileMenu?.classList.add('hidden');
+        hamburgerIcon?.classList.remove('hidden');
+        closeIcon?.classList.add('hidden');
+      }
+    };
+    
+    whatsAppTriggerDesktop?.addEventListener('click', openWhatsAppModal);
+    whatsAppTriggerMobile?.addEventListener('click', openWhatsAppModal);
+  });
+</script>

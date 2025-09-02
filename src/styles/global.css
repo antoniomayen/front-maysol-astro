@@ -96,12 +96,39 @@
 @layer components {
   /* 📏 CONTAINER GLOBAL - Ancho máximo para pantallas ultra wide */
   .container-global {
-    @apply w-full max-w-[1600px] mx-auto;
+    @apply w-full max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8;
   }
 
   /* 📏 CONTAINER FIXED - Para elementos con position fixed que necesiten límite */
   .container-fixed-limit {
     @apply w-full max-w-[1600px] mx-auto;
+  }
+
+  /* 📏 SECTION WRAPPER - Para secciones con fondo completo pero contenido limitado */
+  .section-wrapper {
+    @apply w-full;
+  }
+
+  .section-wrapper > .section-content {
+    @apply max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  /* 📏 BG SECTIONS - Fondos de ancho completo con contenido centrado automáticamente */
+  .bg-section-full {
+    @apply w-full;
+  }
+
+  .bg-section-full > * {
+    @apply max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  /* 📏 UTILITY CLASSES para aplicar límites rápidamente */
+  .max-content-width {
+    @apply max-w-[1600px] mx-auto;
+  }
+
+  .max-content-width-padded {
+    @apply max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8;
   }
 
   /* 📱 FLOATING BUTTON - Posicionado respecto al límite de 1600px */
@@ -124,7 +151,16 @@
   }
 
   .bg-navbar-gradient {
-    background: linear-gradient(to right, #da3414, #c12e0e);
+    background: linear-gradient(90deg, rgba(250, 128, 114, 0.85) 0%, rgba(231, 80, 21, 0.85) 35%, rgba(255, 99, 71, 0.85) 70%, rgba(255, 140, 105, 0.85) 100%);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+
+  .bg-navbar-pages-gradient {
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.9) 0%, rgba(231, 80, 21, 0.3) 50%, rgba(255, 107, 157, 0.2) 100%), 
+                linear-gradient(45deg, #000000 0%, #1a1a1a 100%);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
   }
 
   .bg-btn-gradient {
