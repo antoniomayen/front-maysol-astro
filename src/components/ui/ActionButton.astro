@@ -2,7 +2,7 @@
 // src/components/ui/ActionButton.astro - Inspired by Next.js version
 export interface Props {
   text: string;
-  variant?: 'filled' | 'outline';
+  variant?: 'filled' | 'outline' | 'card';
   size?: 'sm' | 'md' | 'lg';
   id?: string;
   href?: string;
@@ -28,8 +28,8 @@ const baseStyles = "font-bold transition-all duration-300 hover:transform hover:
 // Variant styles
 const variantStyles = {
   filled: "bg-btn-gradient hover:bg-btn-hover-gradient text-white shadow-lg hover:shadow-xl",
-  outline: "border border-orange-400/50 text-white hover:bg-white/20 hover:border-orange-400/70 bg-black/30 backdrop-blur-md shadow-lg shadow-orange-400/20" + " glow-orange"
-  
+  outline: "border border-orange-400/50 text-white hover:bg-white/20 hover:border-orange-400/70 bg-black/30 backdrop-blur-md shadow-lg shadow-orange-400/20" + " glow-orange",
+  card: "bg-btn-gradient hover:bg-btn-hover-gradient text-white shadow-md hover:shadow-lg transition-all duration-200 text-center flex items-center justify-center"
 };
 
 // Size styles

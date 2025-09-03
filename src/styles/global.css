@@ -7,6 +7,7 @@
     /* 🎨 Colores base de Granjas Maysol */
     --primary-color: #da3414;
     --secondary-color: #fb540c;
+    --maysol-orange: #E75015;
     --accent: #e84118;
     --light: #f8f9fa;
     --dark: #2d3436;
@@ -171,8 +172,10 @@
     background: linear-gradient(135deg, rgb(252, 87, 55) 0%, rgb(197, 45, 16) 100%);
   }
 
-  .text-primary-maysol { color: #da3414; }
-  .text-secondary-maysol { color: #fb540c; }
+  .text-primary-maysol { color: var(--primary-color); }
+  .text-secondary-maysol { color: var(--secondary-color); }
+  .text-maysol-orange { color: var(--maysol-orange); }
+  .bg-maysol-orange { background-color: var(--maysol-orange); }
   .text-muted-maysol { color: #636e72; }
   .bg-section-bg { background-color: #f5f7f9; }
 

@@ -5,6 +5,10 @@ import NavbarPages from '../components/layout/NavbarPages.astro';
 import HeroSection from '../components/sections/HeroSection.astro';
 import CategoriesSection from '../components/sections/CategoriesSection.astro';
 import ProductsSection from '../components/sections/ProductsSection.astro';
+import ServicesSection from '../components/sections/ServicesSection.astro'
+import ContactSection from '../components/sections/ContactSection.astro'
+import FAQSection from '../components/sections/FAQSection.astro';
+import Footer from '../layouts/Footer.astro';
 import WhatsAppModal from '../components/ui/WhatsAppModal.astro';
 import FloatingWhatsAppButton from '../components/ui/FloatingWhatsAppButton.astro';
 
@@ -27,43 +31,17 @@ export const prerender = false; // Change to false to fetch products
     <ProductsSection />
     
     <!-- Services Section -->
-    <div class="w-full bg-white">
-      <section id="servicios" class="py-16 container-global">
-        <h2 class="text-3xl font-bold text-center mb-12">Nuestros Servicios</h2>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div class="card bg-white shadow-xl border border-gray-200">
-            <div class="card-body">
-              <h3 class="card-title text-primary">Producción Avícola</h3>
-              <p>Gallinas ponedoras, pollos de engorde y huevos de la más alta calidad.</p>
-            </div>
-          </div>
-          <div class="card bg-white shadow-xl border border-gray-200">
-            <div class="card-body">
-              <h3 class="card-title text-primary">Producción Porcina</h3>
-              <p>Cerdos lechones seleccionados con los mejores estándares de crianza.</p>
-            </div>
-          </div>
-          <div class="card bg-white shadow-xl border border-gray-200">
-            <div class="card-body">
-              <h3 class="card-title text-primary">Asesoría Técnica</h3>
-              <p>Acompañamiento profesional para optimizar tu producción.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-    </div>
-    
+    <ServicesSection />
+
+    <!-- FAQ Section -->
+    <FAQSection />
+
     <!-- Contact Section -->
-    <div class="w-full bg-gray-50">
-      <section id="contacto" class="py-16 container-global text-center">
-        <h2 class="text-3xl font-bold mb-8 text-dark">¿Listo para mejorar tu producción?</h2>
-        <p class="text-xl mb-8 text-muted">Contáctanos hoy mismo y recibe asesoría personalizada</p>
-        <button id="contact-whatsapp" class="bg-[#25d366] hover:bg-[#20bf55] text-white py-3 px-8 text-lg rounded-full font-bold transition-all duration-300 hover:transform hover:-translate-y-1">
-          Contactar Ahora
-        </button>
-      </section>
-    </div>
+    <ContactSection />
   </main>
+
+  <!-- Footer -->
+  <Footer />
   
   <!-- WhatsApp Components -->
   <WhatsAppModal />

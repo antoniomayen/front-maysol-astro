@@ -86,19 +86,19 @@ export const prerender = false;
     <!-- Product Detail -->
     <section class="py-12">
       <div class="container-global">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+        <div class="flex flex-col lg:flex-row gap-8 lg:gap-0 lg:pr-[10%]">
           
           <!-- Image Gallery -->
-          <div class="space-y-4">
+          <div class="lg:w-[40%] space-y-4">
             {allImages.length > 0 ? (
               <>
                 <!-- Main Image -->
-                <div class="aspect-square rounded-lg overflow-hidden bg-gray-100">
+                <div class="rounded-lg overflow-hidden bg-gray-100 h-[min(90vh,600px)]">
                   <img 
                     id="main-product-image"
                     src={getStrapiMediaUrl(allImages[0].url)}
                     alt={allImages[0].alternativeText || name}
-                    class="w-full h-full object-cover"
+                    class="w-full h-full object-contain"
                     width="600"
                     height="600"
                   />
@@ -140,14 +140,14 @@ export const prerender = false;
           </div>
 
           <!-- Product Info -->
-          <div class="space-y-6">
+          <div class="lg:w-[50%] lg:pl-8 space-y-6">
             
             <!-- Header -->
             <div>
               <div class="flex items-start justify-between mb-4">
                 <div>
                   {category && (
-                    <span class="badge badge-secondary badge-lg mb-2">{categoryLabel}</span>
+                    <span class="bg-maysol-orange text-white px-4 py-2 rounded-full text-sm font-medium mb-2 inline-block">{categoryLabel}</span>
                   )}
                   <h1 class="text-3xl lg:text-4xl font-bold">{name}</h1>
                 </div>
@@ -174,8 +174,15 @@ export const prerender = false;
 
             <!-- Short Description -->
             {short_description && short_description !== "Top 10" && (
-              <div class="bg-gray-50 p-4 rounded-lg">
-                <p class="text-lg">{short_description}</p>
+              <div class="bg-gray-50 p-4 rounded-lg max-h-[500px] overflow-hidden relative expandable-container">
+                <div class="expandable-text" id="short-description-text">
+                  <p class="text-lg">
+                    {short_description}
+                    <span class="ver-mas-link text-maysol-orange hover:underline cursor-pointer hidden" data-target="short-description">
+                      ...ver más
+                    </span>
+                  </p>
+                </div>
               </div>
             )}
 
@@ -205,11 +212,16 @@ export const prerender = false;
             {description && (
               <div class="prose max-w-none">
                 <h3 class="text-xl font-bold mb-3">Descripción</h3>
-                <div class="bg-white border border-gray-200 rounded-lg p-4">
+                <div id="description-container" class="bg-white border border-gray-200 rounded-lg p-4 expandable-content md:h-[72px] md:overflow-hidden">
                   <div id="product-description">
                     <!-- Strapi blocks content will be rendered here -->
                     <p class="text-gray-700 italic">Cargando descripción...</p>
                   </div>
+                </div>
+                <div class="flex justify-end">
+                  <button class="ver-mas-btn hidden text-gray-500 hover:underline text-sm font-medium mt-2" data-target="description-container">
+                    Ver más
+                  </button>
                 </div>
               </div>
             )}
@@ -218,10 +230,15 @@ export const prerender = false;
             {technical_info && (
               <div class="prose max-w-none">
                 <h3 class="text-xl font-bold mb-3">Información Técnica</h3>
-                <div class="bg-white border border-gray-200 rounded-lg p-4">
+                <div id="technical-container" class="bg-white border border-gray-200 rounded-lg p-4 expandable-content md:h-[72px] md:overflow-hidden">
                   <div id="technical-info">
                     <p class="text-gray-700 italic">Cargando información técnica...</p>
                   </div>
+                </div>
+                <div class="flex justify-end">
+                  <button class="ver-mas-btn hidden text-gray-500 hover:underline text-sm font-medium mt-2" data-target="technical-container">
+                    Ver más
+                  </button>
                 </div>
               </div>
             )}
@@ -230,10 +247,15 @@ export const prerender = false;
             {usage_instructions && (
               <div class="prose max-w-none">
                 <h3 class="text-xl font-bold mb-3">Instrucciones de Uso</h3>
-                <div class="bg-white border border-gray-200 rounded-lg p-4">
+                <div id="instructions-container" class="bg-white border border-gray-200 rounded-lg p-4 expandable-content md:h-[72px] md:overflow-hidden">
                   <div id="usage-instructions">
                     <p class="text-gray-700 italic">Cargando instrucciones...</p>
                   </div>
+                </div>
+                <div class="flex justify-end">
+                  <button class="ver-mas-btn hidden text-gray-500 hover:underline text-sm font-medium mt-2" data-target="instructions-container">
+                    Ver más
+                  </button>
                 </div>
               </div>
             )}
@@ -340,6 +362,75 @@ export const prerender = false;
     if (description) renderBlocks(description, 'product-description');
     if (technical_info) renderBlocks(technical_info, 'technical-info');
     if (usage_instructions) renderBlocks(usage_instructions, 'usage-instructions');
+
+    // Check if content overflows and show "Ver más" buttons (desktop only)
+    const checkContentOverflow = () => {
+      const expandableContents = document.querySelectorAll('.expandable-content');
+      expandableContents.forEach(container => {
+        const content = container.firstElementChild;
+        const verMasBtn = container.parentElement.querySelector('.ver-mas-btn');
+        
+        // Only check on desktop (md breakpoint)
+        if (window.innerWidth >= 768 && content && verMasBtn) {
+          // Force the container height for accurate measurement
+          container.style.height = '72px';
+          container.style.overflow = 'hidden';
+          
+          // Check if content exceeds container height
+          if (content.scrollHeight > container.clientHeight) {
+            verMasBtn.classList.remove('hidden');
+          } else {
+            verMasBtn.classList.add('hidden');
+          }
+        } else if (verMasBtn) {
+          // On mobile, always hide the button
+          verMasBtn.classList.add('hidden');
+        }
+      });
+    };
+
+    // Handle "Ver más" button clicks
+    const setupVerMasButtons = () => {
+      const verMasBtns = document.querySelectorAll('.ver-mas-btn');
+      verMasBtns.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          const targetId = btn.getAttribute('data-target');
+          const container = document.getElementById(targetId);
+          
+          if (container) {
+            const isExpanded = container.classList.contains('expanded');
+            
+            if (isExpanded) {
+              // Collapse
+              container.classList.remove('expanded');
+              container.classList.add('md:h-[72px]', 'md:overflow-hidden');
+              btn.textContent = 'Ver más';
+            } else {
+              // Expand
+              container.classList.add('expanded');
+              container.classList.remove('md:h-[72px]', 'md:overflow-hidden');
+              btn.textContent = 'Ver menos';
+            }
+          }
+        });
+      });
+    };
+
+    // Initialize after content is rendered
+    setTimeout(() => {
+      checkContentOverflow();
+      setupVerMasButtons();
+    }, 200);
+
+    // Re-check on window resize
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        checkContentOverflow();
+      }, 250);
+    });
   });
 </script>
 
@@ -358,5 +449,36 @@ export const prerender = false;
   
   .thumbnail-btn[data-active="true"] {
     border-color: hsl(var(--p));
+  }
+
+  /* Ver más button styling */
+  .ver-mas-btn {
+    transition: all 0.2s ease;
+  }
+
+  .ver-mas-btn:hover {
+    text-decoration: underline;
+  }
+
+  /* Expandable content transitions */
+  .expandable-content {
+    transition: height 0.3s ease;
+  }
+
+  .expandable-content.expanded {
+    height: auto !important;
+    overflow: visible !important;
+  }
+
+  /* Mobile - always show full content */
+  @media (max-width: 767px) {
+    .expandable-content {
+      height: auto !important;
+      overflow: visible !important;
+    }
+    
+    .ver-mas-btn {
+      display: none !important;
+    }
   }
 </style>

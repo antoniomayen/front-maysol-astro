@@ -71,9 +71,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   </head>
   <body class="min-h-screen bg-base-100 font-sans">
-    <div class="max-w-[1600px] mx-auto">
-      <slot />
-    </div>
+    <slot />
   </body>
 </html>
 

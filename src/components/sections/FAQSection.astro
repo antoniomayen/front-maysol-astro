@@ -1,0 +1,128 @@
+---
+// FAQ Section component
+---
+
+<div class="w-full bg-white">
+  <section class="py-16 max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Section Header -->
+    <div class="text-center mb-12">
+      <h2 class="text-3xl lg:text-4xl font-bold mb-4">
+        Preguntas Frecuentes
+      </h2>
+      <p class="text-lg text-gray-600 max-w-2xl mx-auto mb-6">
+        Resolvemos tus dudas sobre nuestros productos y servicios
+      </p>
+      <div class="divider divider-warning w-24 mx-auto before:bg-maysol-orange after:bg-maysol-orange"></div>
+    </div>
+
+    <!-- FAQ Accordion -->
+    <div class="max-w-4xl mx-auto">
+      <div class="space-y-4">
+        <!-- FAQ Item 1 -->
+        <div class="collapse collapse-plus bg-gray-50 hover:bg-gray-100 transition-colors">
+          <input type="radio" name="faq-accordion" checked />
+          <div class="collapse-title text-lg font-semibold text-gray-900">
+            ¿Cuáles son los horarios de atención?
+          </div>
+          <div class="collapse-content text-gray-600">
+            <p>Atendemos de lunes a viernes de 07:00 a 18:00 horas, y los sábados de 07:00 a 13:00 horas. Los domingos permanecemos cerrados. Para emergencias, puede contactarnos a través de WhatsApp.</p>
+          </div>
+        </div>
+
+        <!-- FAQ Item 2 -->
+        <div class="collapse collapse-plus bg-gray-50 hover:bg-gray-100 transition-colors">
+          <input type="radio" name="faq-accordion" />
+          <div class="collapse-title text-lg font-semibold text-gray-900">
+            ¿Realizan entregas a domicilio?
+          </div>
+          <div class="collapse-content text-gray-600">
+            <p>Sí, realizamos entregas a domicilio en todo el occidente del país. El costo del envío varía según la distancia y el volumen del pedido. Para pedidos mayores a Q1,500 en el área de Quetzaltenango, el envío es gratuito.</p>
+          </div>
+        </div>
+
+        <!-- FAQ Item 3 -->
+        <div class="collapse collapse-plus bg-gray-50 hover:bg-gray-100 transition-colors">
+          <input type="radio" name="faq-accordion" />
+          <div class="collapse-title text-lg font-semibold text-gray-900">
+            ¿Qué edad deben tener las gallinas ponedoras al comprarlas?
+          </div>
+          <div class="collapse-content text-gray-600">
+            <p>Ofrecemos gallinas ponedoras desde pollitas de un día hasta aves de 16-18 semanas listas para iniciar postura. La edad ideal depende de su experiencia y las instalaciones que tenga disponibles. Nuestro equipo técnico puede asesorarle sobre la mejor opción para su proyecto.</p>
+          </div>
+        </div>
+
+        <!-- FAQ Item 4 -->
+        <div class="collapse collapse-plus bg-gray-50 hover:bg-gray-100 transition-colors">
+          <input type="radio" name="faq-accordion" />
+          <div class="collapse-title text-lg font-semibold text-gray-900">
+            ¿Incluyen asesoría técnica con la compra?
+          </div>
+          <div class="collapse-content text-gray-600">
+            <p>Sí, todos nuestros clientes reciben asesoría técnica básica con su compra. Además, ofrecemos servicios especializados de vacunación, despique y visitas técnicas periódicas para garantizar el éxito de su producción avícola.</p>
+          </div>
+        </div>
+
+        <!-- FAQ Item 5 -->
+        <div class="collapse collapse-plus bg-gray-50 hover:bg-gray-100 transition-colors">
+          <input type="radio" name="faq-accordion" />
+          <div class="collapse-title text-lg font-semibold text-gray-900">
+            ¿Qué tipos de alimento balanceado ofrecen?
+          </div>
+          <div class="collapse-content text-gray-600">
+            <p>Manejamos alimentos balanceados para todas las etapas productivas: iniciador, crecimiento, desarrollo, pre-postura y postura para aves. También contamos con alimentos especializados para cerdos. Todos nuestros alimentos cumplen con los más altos estándares de calidad nutricional.</p>
+          </div>
+        </div>       
+
+        <!-- FAQ Item 7 -->
+        <div class="collapse collapse-plus bg-gray-50 hover:bg-gray-100 transition-colors">
+          <input type="radio" name="faq-accordion" />
+          <div class="collapse-title text-lg font-semibold text-gray-900">
+            ¿Cuáles son las formas de pago disponibles?
+          </div>
+          <div class="collapse-content text-gray-600">
+            <p>Aceptamos pagos en efectivo, transferencias bancarias y depósitos. Consulte con nuestro equipo de ventas para más información.</p>
+          </div>
+        </div>
+
+        <!-- FAQ Item 8 -->
+        <div class="collapse collapse-plus bg-gray-50 hover:bg-gray-100 transition-colors">
+          <input type="radio" name="faq-accordion" />
+          <div class="collapse-title text-lg font-semibold text-gray-900">
+            ¿Cómo puedo iniciar mi propia granja avícola?
+          </div>
+          <div class="collapse-content text-gray-600">
+            <p>Ofrecemos paquetes completos para iniciar su granja, que incluyen: aves, equipo, alimento inicial y capacitación. Nuestro equipo técnico le ayudará a diseñar las instalaciones, establecer protocolos de manejo y garantizar un arranque exitoso de su proyecto.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CTA Section -->
+    <div class="text-center mt-12">
+      <p class="text-gray-600 mb-4">¿No encuentras la respuesta que buscas?</p>
+      <button 
+        id="faq-whatsapp"
+        class="bg-maysol-orange text-white px-8 py-3 rounded-full hover:bg-maysol-orange/90 transition-colors font-semibold"
+      >
+        Contáctanos por WhatsApp
+      </button>
+    </div>
+  </section>
+</div>
+
+<script>
+  // WhatsApp trigger for FAQ section
+  document.getElementById('faq-whatsapp')?.addEventListener('click', () => {
+    const modal = document.getElementById('whatsapp-modal') as HTMLDialogElement;
+    if (modal) {
+      // Pre-fill message for FAQ inquiry
+      const messageTextarea = modal.querySelector('textarea[name="message"]') as HTMLTextAreaElement;
+      if (messageTextarea) {
+        messageTextarea.value = 'Hola, tengo una consulta que no está en las preguntas frecuentes. ¿Pueden ayudarme?';
+      }
+      
+      modal.showModal();
+      document.body.style.overflow = 'hidden';
+    }
+  });
+</script>

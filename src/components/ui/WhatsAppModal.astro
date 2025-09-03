@@ -1,18 +1,32 @@
 ---
-// src/components/ui/WhatsAppModal.astro 
-import { User, Tag, MapPin, MessageCircle } from 'lucide-astro';
+// src/components/ui/WhatsAppModal.astro - 5 Steps Enhanced
 
 const productOptions = [
-  { value: "Gallinas ponedoras", label: "Gallinas ponedoras" },
-  { value: "Pollos de engorde", label: "Pollos de engorde (Chompipollos)" },
-  { value: "Huevos", label: "Huevos (blancos o colorados)" },
-  { value: "Cerdos", label: "Cerdos lechones" },
-  { value: "Alimentos", label: "Alimentos balanceados" },
-  { value: "Materias primas", label: "Materias primas (maíz, soya)" },
-  { value: "Servicios", label: "Servicios (vacunación, despique)" },
-  { value: "Asesoría", label: "Asesoría técnica" },
-  { value: "Otro", label: "Otro (especificar en mensaje)" }
+  { value: "gallinas-ponedoras", label: "Gallinas ponedoras", desc: "Aves listas para postura" },
+  { value: "pollos-engorde", label: "Pollos de engorde", desc: "Para carne de calidad" },
+  { value: "huevos", label: "Huevos frescos", desc: "Producción diaria" },
+  { value: "cerdos", label: "Cerdos lechones", desc: "Para engorde" },
+  { value: "alimentos", label: "Alimentos balanceados", desc: "Nutrición especializada" },
+  { value: "otros", label: "Otros productos", desc: "Consultar disponibilidad" }
 ];
+
+const serviceOptions = [
+  { value: "vacunacion", label: "Vacunación", desc: "Protección preventiva" },
+  { value: "despique", label: "Despique", desc: "Manejo especializado" },
+  { value: "visitas-tecnicas", label: "Visitas técnicas", desc: "Asesoría en granja" },
+  { value: "asesoria", label: "Asesoría técnica", desc: "Consultoría especializada" },
+  { value: "capacitacion", label: "Capacitación", desc: "Formación profesional" },
+  { value: "ninguno", label: "Solo productos", desc: "Sin servicios adicionales" }
+];
+
+const guatemalaRegions = {
+  "Occidental": ["Quetzaltenango", "San Marcos", "Huehuetenango", "Totonicapán", "Sololá"],
+  "Sur Occidental": ["Retalhuleu", "Suchitepéquez"],
+  "Central": ["Chimaltenango", "Escuintla", "Guatemala", "Sacatepéquez"],
+  "Sur Oriental": ["Santa Rosa", "Jutiapa"],
+  "Oriental": ["Jalapa", "Chiquimula", "Zacapa", "El Progreso", "Izabal"],
+  "Norte": ["Quiché", "Alta Verapaz", "Baja Verapaz", "Petén"]
+};
 ---
 
 <!-- Modal with fixed backdrop -->
@@ -21,258 +35,867 @@ const productOptions = [
   <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" id="modal-backdrop"></div>
   
   <!-- Modal -->
-  <div class="relative bg-white rounded-lg shadow-2xl w-full max-w-md mx-4 max-h-[90vh] overflow-y-auto">
+  <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-[430px] mx-4 max-h-[90vh] overflow-hidden">
     <!-- Header -->
-    <div class="bg-[#20bf6b] text-white p-6 rounded-t-lg">
+    <div class="bg-gradient-to-r from-maysol-orange to-orange-600 text-white p-4">
       <div class="flex items-center justify-between">
-        <h2 class="flex items-center gap-2 text-xl font-bold">
-          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.785"/>
-          </svg>
-          Contáctanos por WhatsApp
-        </h2>
+        <div class="flex items-center gap-3">
+          <img src="/images/logo_maysol-nobg.png" alt="Granjas Maysol" class="w-10 h-10 rounded-full bg-white/20 p-1">
+          <div class="flex flex-col justify-center">
+            <h2 class="text-lg font-bold leading-tight">Granjas Maysol</h2>            
+          </div>
+        </div>
         <button
           id="modal-close-btn"
-          class="text-white hover:bg-white/20 p-1 rounded-full transition-colors"
+          class="text-white hover:bg-white/20 p-2 rounded-full transition-colors"
         >
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
           </svg>
         </button>
       </div>
+      
+      <!-- Progress Bar -->
+      <div class="mt-3">
+        <div class="flex items-center justify-between mb-1">
+          <span class="text-xs text-black">Paso <span id="step-counter">1</span> de 5</span>
+          <span class="text-xs text-black" id="step-title">Información personal</span>
+        </div>
+        <div class="flex space-x-1">
+          <div class="flex-1 h-2 bg-black/20 rounded-full overflow-hidden">
+            <div id="progress-1" class="h-full bg-maysol-orange transition-all duration-300 w-full"></div>
+          </div>
+          <div class="flex-1 h-2 bg-black/20 rounded-full overflow-hidden">
+            <div id="progress-2" class="h-full bg-maysol-orange transition-all duration-300 w-0"></div>
+          </div>
+          <div class="flex-1 h-2 bg-black/20 rounded-full overflow-hidden">
+            <div id="progress-3" class="h-full bg-maysol-orange transition-all duration-300 w-0"></div>
+          </div>
+          <div class="flex-1 h-2 bg-black/20 rounded-full overflow-hidden">
+            <div id="progress-4" class="h-full bg-maysol-orange transition-all duration-300 w-0"></div>
+          </div>
+          <div class="flex-1 h-2 bg-black/20 rounded-full overflow-hidden">
+            <div id="progress-5" class="h-full bg-maysol-orange transition-all duration-300 w-0"></div>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <!-- Content -->
-    <div class="p-6">
-      <!-- Agent Image & Description -->
-      <div class="text-center mb-6">
-        <div class="mb-4">
-          <img
-            src="/images/agent_chat.png"
-            alt="Granjas Maysol"
-            width="120"
-            height="120"
-            class="mx-auto rounded-full"
-          />
+    <!-- Chat-like Content -->
+    <div class="bg-gray-50 min-h-[500px] flex flex-col">
+      <!-- Messages Container -->
+      <div class="flex-1 p-6 space-y-4 overflow-y-auto" id="chat-container">
+        
+        <!-- Step 1: Contact Info -->
+        <div id="step-1" class="space-y-4">
+          <div class="flex items-start gap-3">
+            <img src="/images/agent_chat.png" alt="Maysol Agent" class="w-10 h-10 rounded-full flex-shrink-0">
+            <div class="bg-white rounded-2xl rounded-tl-md p-4 shadow-sm max-w-xs">
+              <p class="text-gray-800 text-sm">
+                ¡Hola! 👋 Soy tu asistente de Granjas Maysol. 
+                <br><br>
+                Para comenzar, necesito conocerte:
+              </p>
+            </div>
+          </div>
+
+          <div class="flex justify-end">
+            <div class="bg-maysol-orange/10 rounded-2xl rounded-tr-md p-4 max-w-sm ml-12">
+              <div class="space-y-3">
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">
+                    ¿Cuál es tu nombre? 
+                  </label>
+                  <input
+                    type="text"
+                    id="name-input"
+                    placeholder="Ejemplo: Carlos de Leon"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-maysol-orange/50 text-gray-900 bg-white text-sm"
+                  />
+                  <p class="text-red-500 text-xs mt-1 hidden" id="error-name">Ingresa tu nombre</p>
+                </div>
+
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">
+                    Tu número de teléfono 📱
+                  </label>
+                  <div class="flex gap-1">
+                    <div class="flex items-center gap-1 px-2 py-2 bg-gray-200 rounded-l-lg">
+                      <span class="text-sm">🇬🇹</span>
+                      <span class="text-gray-700 text-sm font-medium">+502</span>
+                    </div>
+                    <input
+                      type="tel"
+                      id="phone-input"
+                      placeholder="0000-0000"
+                      maxlength="10"
+                      class="flex-1 px-3 py-2 border border-gray-300 rounded-r-lg focus:outline-none focus:ring-2 focus:ring-maysol-orange/50 text-gray-900 bg-white text-sm"
+                    />
+                  </div>
+                  <p class="text-red-500 text-xs mt-1 hidden" id="error-phone">Ingresa un número válido</p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-        <h3 class="text-xl font-semibold text-[#da3414] mb-2">
-          Atención personalizada para tu proyecto
-        </h3>
-        <p class="text-gray-600 text-sm">
-          Cuéntanos qué necesitas y te responderemos a la brevedad
-        </p>
+
+        <!-- Step 2: Products -->
+        <div id="step-2" class="space-y-4 hidden">
+          <div class="flex items-start gap-3">
+            <img src="/images/agent_chat.png" alt="Maysol Agent" class="w-10 h-10 rounded-full flex-shrink-0">
+            <div class="bg-white rounded-2xl rounded-tl-md p-4 shadow-sm max-w-sm">
+              <p class="text-gray-800 text-sm">
+                ¡Perfecto, <span id="user-name-display-1" class="font-medium text-maysol-orange"></span>! 
+                <br><br>
+                ¿Qué producto te interesa? 🛒
+              </p>
+            </div>
+          </div>
+
+          <div class="flex justify-end">
+            <div class="bg-maysol-orange/10 rounded-2xl rounded-tr-md p-4 max-w-md ml-8">
+              <div class="grid grid-cols-1 gap-3">
+                {productOptions.map((option) => (
+                  <label class="cursor-pointer product-option-container">
+                    <input
+                      type="radio"
+                      name="product"
+                      value={option.value}
+                      class="hidden product-radio"
+                    />
+                    <div class="border-2 border-gray-300 rounded-xl p-3 hover:border-maysol-orange hover:bg-maysol-orange/10 transition-all product-option">
+                      <div class="flex items-center gap-3">
+                        <!-- Icon removed -->
+                        <div class="flex-1">
+                          <div class="font-medium text-gray-900 text-sm">{option.label}</div>
+                          <div class="text-xs text-gray-600">{option.desc}</div>
+                        </div>
+                        <div class="w-5 h-5 border-2 border-gray-400 rounded-full flex items-center justify-center product-radio-visual">
+                          <div class="w-2.5 h-2.5 bg-maysol-orange rounded-full hidden product-radio-dot"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </label>
+                ))}
+              </div>
+              <p class="text-red-500 text-xs mt-2 hidden" id="error-product">Selecciona un producto</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 3: Services -->
+        <div id="step-3" class="space-y-4 hidden">
+          <div class="flex items-start gap-3">
+            <img src="/images/agent_chat.png" alt="Maysol Agent" class="w-10 h-10 rounded-full flex-shrink-0">
+            <div class="bg-white rounded-2xl rounded-tl-md p-4 shadow-sm max-w-sm">
+              <p class="text-gray-800 text-sm">
+                Excelente elección! 👍
+                <br><br>
+                ¿Necesitas algún servicio técnico? 🛠️
+              </p>
+            </div>
+          </div>
+
+          <div class="flex justify-end">
+            <div class="bg-maysol-orange/10 rounded-2xl rounded-tr-md p-4 max-w-md ml-8">
+              <div class="grid grid-cols-1 gap-3">
+                {serviceOptions.map((option) => (
+                  <label class="cursor-pointer service-option-container">
+                    <input
+                      type="radio"
+                      name="service"
+                      value={option.value}
+                      class="hidden service-radio"
+                    />
+                    <div class="border-2 border-gray-300 rounded-xl p-3 hover:border-maysol-orange hover:bg-maysol-orange/10 transition-all service-option">
+                      <div class="flex items-center gap-3">
+                        <!-- Icon removed -->
+                        <div class="flex-1">
+                          <div class="font-medium text-gray-900 text-sm">{option.label}</div>
+                          <div class="text-xs text-gray-600">{option.desc}</div>
+                        </div>
+                        <div class="w-5 h-5 border-2 border-gray-400 rounded-full flex items-center justify-center service-radio-visual">
+                          <div class="w-2.5 h-2.5 bg-maysol-orange rounded-full hidden service-radio-dot"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </label>
+                ))}
+              </div>
+              <p class="text-red-500 text-xs mt-2 hidden" id="error-service">Selecciona una opción</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 4: Location -->
+        <div id="step-4" class="space-y-4 hidden">
+          <div class="flex items-start gap-3">
+            <img src="/images/agent_chat.png" alt="Maysol Agent" class="w-10 h-10 rounded-full flex-shrink-0">
+            <div class="bg-white rounded-2xl rounded-tl-md p-4 shadow-sm max-w-sm">
+              <p class="text-gray-800 text-sm">
+                ¡Perfecto! 
+                <br><br>
+                ¿En qué municipio de Guatemala está tu granja? 📍🇬🇹
+              </p>
+            </div>
+          </div>
+
+          <div class="flex justify-end">
+            <div class="bg-maysol-orange/10 rounded-2xl rounded-tr-md p-4 max-w-md ml-8">
+              <!-- Region Selector -->
+              <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700 mb-2">
+                  Selecciona tu región:
+                </label>
+                <select 
+                  id="region-select" 
+                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-maysol-orange/50 text-gray-900 bg-white text-sm"
+                >
+                  <option value="">Selecciona una región...</option>
+                  <option value="Occidental">Occidental</option>
+                  <option value="Sur Occidental">Sur Occidental</option>
+                  <option value="Central">Central</option>
+                  <option value="Sur Oriental">Sur Oriental</option>
+                  <option value="Oriental">Oriental</option>
+                  <option value="Norte">Norte</option>
+                </select>
+                <p class="text-red-500 text-xs mt-1 hidden" id="error-region">Selecciona tu región</p>
+              </div>
+              
+              <!-- Municipality Selector -->
+              <div class="space-y-2">
+                <label class="block text-sm font-medium text-gray-700 mb-2">
+                  Selecciona tu municipio:
+                </label>
+                <select 
+                  id="municipality-select" 
+                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-maysol-orange/50 text-gray-900 bg-white text-sm disabled:bg-gray-100"
+                  disabled
+                >
+                  <option value="">Primero selecciona una región...</option>
+                </select>
+                <p class="text-red-500 text-xs mt-1 hidden" id="error-municipality">Selecciona tu municipio</p>
+
+                <!-- Advisor Contact -->
+                <div class="mt-3 pt-3 border-t border-gray-200">
+                  <label class="flex items-center gap-2 cursor-pointer text-sm">
+                    <input
+                      type="checkbox"
+                      id="advisor-checkbox"
+                      class="w-4 h-4 text-maysol-orange rounded focus:ring-maysol-orange"
+                    />
+                    <span class="text-gray-700">Me gustaría que un asesor me contacte</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 5: Summary -->
+        <div id="step-5" class="space-y-4 hidden">
+          <div class="flex items-start gap-3">
+            <img src="/images/agent_chat.png" alt="Maysol Agent" class="w-10 h-10 rounded-full flex-shrink-0">
+            <div class="bg-white rounded-2xl rounded-tl-md p-4 shadow-sm max-w-sm">
+              <p class="text-gray-800 text-sm">
+                ¡Excelente, <span id="user-name-display-2" class="font-medium text-maysol-orange"></span>! 
+                <br><br>
+                Aquí está tu resumen: ✅
+              </p>
+              
+              <div class="mt-3 p-3 bg-gray-50 rounded-lg space-y-2 text-xs">
+                <div class="flex justify-between">
+                  <span class="text-gray-600">👤 Nombre:</span>
+                  <span class="font-medium" id="summary-name"></span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-gray-600">📱 Teléfono:</span>
+                  <span class="font-medium" id="summary-phone"></span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-gray-600">🛒 Producto:</span>
+                  <span class="font-medium" id="summary-product"></span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-gray-600">🛠️ Servicio:</span>
+                  <span class="font-medium" id="summary-service"></span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-gray-600">📍 Ubicación:</span>
+                  <span class="font-medium" id="summary-municipality"></span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-gray-600">👨‍💼 Asesor:</span>
+                  <span class="font-medium" id="summary-advisor"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex justify-end">
+            <div class="bg-maysol-orange/10 rounded-2xl rounded-tr-md p-4 max-w-sm ml-8">
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                ¿Algo más que agregar? 💬
+              </label>
+              <textarea
+                id="additional-message"
+                rows="3"
+                placeholder="Pregunta adicional, cantidad requerida, etc..."
+                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-maysol-orange/50 resize-none text-gray-900 bg-white text-sm"
+              ></textarea>
+            </div>
+          </div>
+        </div>
+
       </div>
 
-      <!-- Form -->
-      <form id="whatsapp-form" class="space-y-4">
-        <!-- Name -->
-        <div class="space-y-2">
-          <label class="flex items-center gap-2 font-semibold text-sm text-gray-700">
-            <User class="w-4 h-4 text-[#da3414]" />
-            Tu nombre
-          </label>
-          <input
-            type="text"
-            name="name"
-            placeholder="Ejemplo: Ana López"
-            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#da3414]/50 text-gray-900 bg-white"
-            required
-          />
-          <p class="text-red-500 text-sm hidden error-name">Por favor ingresa tu nombre</p>
-        </div>
-
-        <!-- Interest -->
-        <div class="space-y-2">
-          <label class="flex items-center gap-2 font-semibold text-sm text-gray-700">
-            <Tag class="w-4 h-4 text-[#da3414]" />
-            ¿Qué producto te interesa?
-          </label>
-          <select
-            name="interest"
-            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#da3414]/50 text-gray-900 bg-white"
-            required
+      <!-- Fixed Bottom Actions -->
+      <div class="p-6 bg-white border-t border-gray-200">
+        <div class="flex gap-3">
+          <button
+            id="prev-btn"
+            class="hidden px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-full font-medium transition-colors text-sm"
           >
-            <option value="">Selecciona una opción</option>
-            {productOptions.map((option) => (
-              <option value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
-          <p class="text-red-500 text-sm hidden error-interest">Por favor selecciona un producto</p>
-        </div>
+            ← Anterior
+          </button>
+          
+          <button
+            id="next-btn"
+            class="flex-1 bg-maysol-orange hover:bg-orange-600 text-white py-3 px-6 rounded-full font-semibold transition-colors text-sm flex items-center justify-center gap-2"
+          >
+            <span>Continuar</span>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+            </svg>
+          </button>
 
-        <!-- Location -->
-        <div class="space-y-2">
-          <label class="flex items-center gap-2 font-semibold text-sm text-gray-700">
-            <MapPin class="w-4 h-4 text-[#da3414]" />
-            ¿De qué municipio nos escribes?
-          </label>
-          <input
-            type="text"
-            name="location"
-            placeholder="Ejemplo: Quetzaltenango"
-            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#da3414]/50 text-gray-900 bg-white"
-            required
-          />
-          <p class="text-red-500 text-sm hidden error-location">Por favor ingresa tu ubicación</p>
+          <button
+            id="submit-btn"
+            class="hidden bg-maysol-orange hover:bg-orange-600 text-white py-3 px-6 rounded-full font-semibold transition-colors text-sm"
+          >
+            <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.1.824z"/>
+            </svg>
+            <span>Enviar por WhatsApp</span>
+          </button>
         </div>
-
-        <!-- Message -->
-        <div class="space-y-2">
-          <label class="flex items-center gap-2 font-semibold text-sm text-gray-700">
-            <MessageCircle class="w-4 h-4 text-[#da3414]" />
-            Tu mensaje
-          </label>
-          <textarea
-            rows="3"
-            name="message"
-            placeholder="Ejemplo: Me gustaría información sobre gallinas ponedoras, precios y disponibilidad"
-            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#da3414]/50 resize-none text-gray-900 bg-white"
-            required
-          ></textarea>
-          <p class="text-red-500 text-sm hidden error-message">Por favor ingresa tu mensaje</p>
-        </div>
-
-        <!-- Submit Button -->
-        <button
-          type="submit"
-          class="w-full bg-[#20bf6b] hover:bg-[#20bf6b]/90 text-white py-3 px-4 rounded-lg font-semibold transition-colors flex items-center justify-center gap-2"
-        >
-          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.785"/>
-          </svg>
-          Enviar mensaje por WhatsApp
-        </button>
-      </form>
+      </div>
     </div>
   </div>
 </dialog>
 
 <script>
-  // WhatsApp Modal functionality - Modern version inspired by Next.js
+  // WhatsApp Modal - 5-Step Enhanced
   document.addEventListener('DOMContentLoaded', () => {
     const modal = document.getElementById('whatsapp-modal') as HTMLDialogElement;
     const modalBackdrop = document.getElementById('modal-backdrop');
     const modalCloseBtn = document.getElementById('modal-close-btn');
-    const form = document.getElementById('whatsapp-form') as HTMLFormElement;
-    const whatsappNumber = '50230715822';
+    const chatContainer = document.getElementById('chat-container');
     
-    let formData: {
-      name: string;
-      interest: string;
-      location: string;
-      message: string;
-    } = {
+    // Navigation
+    const prevBtn = document.getElementById('prev-btn');
+    const nextBtn = document.getElementById('next-btn');
+    const submitBtn = document.getElementById('submit-btn');
+    
+    // Progress elements
+    const stepCounter = document.getElementById('step-counter');
+    const stepTitle = document.getElementById('step-title');
+    
+    // WhatsApp numbers
+    const whatsappNumbers = ['50257276592', '50230715822'];
+    
+    let currentStep = 1;
+    let formData = {
       name: '',
-      interest: '',
-      location: '',
-      message: ''
+      phone: '',
+      product: '',
+      service: '',
+      municipality: '',
+      region: '',
+      advisor: false,
+      additionalMessage: ''
     };
     
-    let errors: Record<string, string> = {};
+    const stepTitles = {
+      1: 'Información personal',
+      2: 'Selección de productos',
+      3: 'Servicios técnicos',
+      4: 'Ubicación en Guatemala',
+      5: 'Confirmación final'
+    };
     
-    // Show modal
+    // Show/Hide modal functions
     const showModal = () => {
       if (modal) {
         modal.showModal();
         document.body.style.overflow = 'hidden';
+        currentStep = 1;
+        updateStep();
       }
     };
     
-    // Hide modal
     const hideModal = () => {
       if (modal) {
         modal.close();
         document.body.style.overflow = 'unset';
+        resetForm();
       }
     };
     
-    // Validate form
-    const validateForm = () => {
-      const newErrors: Record<string, string> = {};
+    const resetForm = () => {
+      currentStep = 1;
+      formData = {
+        name: '',
+        phone: '',
+        product: '',
+        service: '',
+        municipality: '',
+        region: '',
+        advisor: false,
+        additionalMessage: ''
+      };
       
-      if (!formData.name.trim()) newErrors.name = 'Por favor ingresa tu nombre';
-      if (!formData.interest) newErrors.interest = 'Por favor selecciona un producto';
-      if (!formData.location.trim()) newErrors.location = 'Por favor ingresa tu ubicación';
-      if (!formData.message.trim()) newErrors.message = 'Por favor ingresa tu mensaje';
+      // Reset all inputs
+      (document.getElementById('name-input') as HTMLInputElement).value = '';
+      (document.getElementById('phone-input') as HTMLInputElement).value = '';
+      document.querySelectorAll('.product-radio').forEach((radio: any) => radio.checked = false);
+      document.querySelectorAll('.service-radio').forEach((radio: any) => radio.checked = false);
+      (document.getElementById('region-select') as HTMLSelectElement).value = '';
+      (document.getElementById('municipality-select') as HTMLSelectElement).value = '';
+      (document.getElementById('municipality-select') as HTMLSelectElement).disabled = true;
+      (document.getElementById('advisor-checkbox') as HTMLInputElement).checked = false;
+      (document.getElementById('additional-message') as HTMLTextAreaElement).value = '';
       
-      errors = newErrors;
+      // Clear all errors and selections
+      document.querySelectorAll('[id^="error-"]').forEach(error => error.classList.add('hidden'));
+      clearSelections();
       
-      // Show/hide error messages
-      Object.keys(formData).forEach(field => {
-        const errorElement = document.querySelector(`.error-${field}`);
-        if (errors[field]) {
-          errorElement?.classList.remove('hidden');
-        } else {
-          errorElement?.classList.add('hidden');
-        }
-      });
-      
-      return Object.keys(newErrors).length === 0;
+      updateStep();
     };
     
-    // Handle form submission
-    const handleSubmit = (e: Event) => {
-      e.preventDefault();
+    const clearSelections = () => {
+      // Clear product selections
+      document.querySelectorAll('.product-option').forEach(option => {
+        option.classList.remove('border-maysol-orange', 'bg-maysol-orange/20');
+        option.classList.add('border-gray-300');
+      });
+      document.querySelectorAll('.product-radio-visual').forEach(visual => {
+        visual.classList.remove('border-maysol-orange');
+        visual.classList.add('border-gray-400');
+      });
+      document.querySelectorAll('.product-radio-dot').forEach(dot => dot.classList.add('hidden'));
       
-      if (!validateForm()) return;
+      // Clear service selections
+      document.querySelectorAll('.service-option').forEach(option => {
+        option.classList.remove('border-maysol-orange', 'bg-maysol-orange/20');
+        option.classList.add('border-gray-300');
+      });
+      document.querySelectorAll('.service-radio-visual').forEach(visual => {
+        visual.classList.remove('border-maysol-orange');
+        visual.classList.add('border-gray-400');
+      });
+      document.querySelectorAll('.service-radio-dot').forEach(dot => dot.classList.add('hidden'));
       
-      const whatsappMessage = `Hola Granjas Maysol! Mi nombre es ${formData.name} de ${formData.location}. Me interesa información sobre: ${formData.interest}. ${formData.message}`;
+      // Clear region and municipality selections
+      const regionSelect = document.getElementById('region-select') as HTMLSelectElement;
+      const municipalitySelect = document.getElementById('municipality-select') as HTMLSelectElement;
+      if (regionSelect) regionSelect.value = '';
+      if (municipalitySelect) {
+        municipalitySelect.value = '';
+        municipalitySelect.disabled = true;
+      }
+    };
+    
+    // Validate phone number (Guatemala format)
+    const validatePhone = (phone: string): { isValid: boolean, message: string } => {
+      const cleaned = phone.replace(/\D/g, '');
       
-      const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(whatsappMessage)}`;
+      if (cleaned.length === 0) {
+        return { isValid: false, message: 'Ingresa tu número de teléfono' };
+      }
+      
+      if (cleaned.length < 8) {
+        return { isValid: false, message: `Faltan ${8 - cleaned.length} dígitos (${cleaned.length}/8)` };
+      }
+      
+      if (cleaned.length > 8) {
+        return { isValid: false, message: 'El número debe tener exactamente 8 dígitos' };
+      }
+      
+      // Must be exactly 8 digits (Guatemala mobile format)
+      return { isValid: true, message: '' };
+    };
+    
+    // Format phone for display
+    const formatPhone = (phone: string): string => {
+      const cleaned = phone.replace(/\D/g, '');
+      if (cleaned.length === 8) {
+        return `${cleaned.slice(0, 4)}-${cleaned.slice(4)}`;
+      }
+      return phone;
+    };
+    
+    // Smooth scroll to bottom
+    const scrollToBottom = () => {
+      setTimeout(() => {
+        if (chatContainer) {
+          chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+      }, 100);
+    };
+    
+    // Validate current step
+    const validateStep = (step: number): boolean => {
+      let isValid = true;
+      
+      if (step === 1) {
+        // Validate name
+        const nameInput = document.getElementById('name-input') as HTMLInputElement;
+        if (!nameInput.value.trim()) {
+          document.getElementById('error-name')?.classList.remove('hidden');
+          isValid = false;
+        } else {
+          document.getElementById('error-name')?.classList.add('hidden');
+          formData.name = nameInput.value.trim();
+        }
+        
+        // Validate phone
+        const phoneInput = document.getElementById('phone-input') as HTMLInputElement;
+        const phoneValidation = validatePhone(phoneInput.value);
+        const errorPhoneElement = document.getElementById('error-phone');
+        
+        if (!phoneValidation.isValid) {
+          if (errorPhoneElement) {
+            errorPhoneElement.textContent = phoneValidation.message;
+            errorPhoneElement.classList.remove('hidden');
+          }
+          isValid = false;
+        } else {
+          errorPhoneElement?.classList.add('hidden');
+          formData.phone = phoneInput.value.replace(/\D/g, '');
+        }
+      } else if (step === 2) {
+        // Validate product selection
+        const selectedProduct = document.querySelector('.product-radio:checked') as HTMLInputElement;
+        if (!selectedProduct) {
+          document.getElementById('error-product')?.classList.remove('hidden');
+          isValid = false;
+        } else {
+          document.getElementById('error-product')?.classList.add('hidden');
+          formData.product = selectedProduct.value;
+        }
+      } else if (step === 3) {
+        // Validate service selection
+        const selectedService = document.querySelector('.service-radio:checked') as HTMLInputElement;
+        if (!selectedService) {
+          document.getElementById('error-service')?.classList.remove('hidden');
+          isValid = false;
+        } else {
+          document.getElementById('error-service')?.classList.add('hidden');
+          formData.service = selectedService.value;
+        }
+      } else if (step === 4) {
+        // Validate region
+        const regionSelect = document.getElementById('region-select') as HTMLSelectElement;
+        if (!regionSelect.value) {
+          document.getElementById('error-region')?.classList.remove('hidden');
+          isValid = false;
+        } else {
+          document.getElementById('error-region')?.classList.add('hidden');
+          formData.region = regionSelect.value;
+        }
+        
+        // Validate municipality
+        const municipalitySelect = document.getElementById('municipality-select') as HTMLSelectElement;
+        if (!municipalitySelect.value) {
+          document.getElementById('error-municipality')?.classList.remove('hidden');
+          isValid = false;
+        } else {
+          document.getElementById('error-municipality')?.classList.add('hidden');
+          formData.municipality = municipalitySelect.value;
+        }
+        
+        // Get advisor preference
+        formData.advisor = (document.getElementById('advisor-checkbox') as HTMLInputElement).checked;
+      }
+      
+      return isValid;
+    };
+    
+    // Update step display
+    const updateStep = () => {
+      // Hide all steps
+      for (let i = 1; i <= 5; i++) {
+        document.getElementById(`step-${i}`)?.classList.add('hidden');
+      }
+      
+      // Show current step
+      document.getElementById(`step-${currentStep}`)?.classList.remove('hidden');
+      
+      // Update progress
+      if (stepCounter) stepCounter.textContent = currentStep.toString();
+      if (stepTitle) stepTitle.textContent = stepTitles[currentStep as keyof typeof stepTitles];
+      
+      // Update progress bars
+      for (let i = 1; i <= 5; i++) {
+        const progressBar = document.getElementById(`progress-${i}`);
+        if (progressBar) {
+          progressBar.style.width = i <= currentStep ? '100%' : '0%';
+        }
+      }
+      
+      // Update buttons
+      if (currentStep === 1) {
+        prevBtn?.classList.add('hidden');
+        nextBtn?.classList.remove('hidden');
+        submitBtn?.classList.add('hidden');
+      } else if (currentStep === 5) {
+        prevBtn?.classList.remove('hidden');
+        nextBtn?.classList.add('hidden');
+        if (submitBtn) {
+          submitBtn.classList.remove('hidden');
+          submitBtn.classList.add('flex-1', 'flex', 'items-center', 'justify-center', 'gap-2');
+        }
+        updateSummary();
+      } else {
+        prevBtn?.classList.remove('hidden');
+        nextBtn?.classList.remove('hidden');
+        if (submitBtn) {
+          submitBtn.classList.add('hidden');
+          submitBtn.classList.remove('flex-1', 'flex', 'items-center', 'justify-center', 'gap-2');
+        }
+      }
+      
+      // Update name displays
+      if (currentStep >= 2) {
+        const firstName = formData.name.split(' ')[0];
+        document.getElementById('user-name-display-1')!.textContent = firstName;
+        document.getElementById('user-name-display-2')!.textContent = firstName;
+      }
+      
+      scrollToBottom();
+    };
+    
+    // Update summary display
+    const updateSummary = () => {
+      const productLabels: Record<string, string> = {
+        'gallinas-ponedoras': 'Gallinas ponedoras',
+        'pollos-engorde': 'Pollos de engorde',
+        'huevos': 'Huevos frescos',
+        'cerdos': 'Cerdos lechones',
+        'alimentos': 'Alimentos balanceados',
+        'otros': 'Otros productos'
+      };
+      
+      const serviceLabels: Record<string, string> = {
+        'vacunacion': 'Vacunación',
+        'despique': 'Despique',
+        'visitas-tecnicas': 'Visitas técnicas',
+        'asesoria': 'Asesoría técnica',
+        'capacitacion': 'Capacitación',
+        'ninguno': 'Solo productos'
+      };
+      
+      document.getElementById('summary-name')!.textContent = formData.name;
+      document.getElementById('summary-phone')!.textContent = `🇬🇹 +502 ${formatPhone(formData.phone)}`;
+      document.getElementById('summary-product')!.textContent = productLabels[formData.product] || formData.product;
+      document.getElementById('summary-service')!.textContent = serviceLabels[formData.service] || 'No especificado';
+      document.getElementById('summary-municipality')!.textContent = `${formData.municipality}, ${formData.region}`;
+      document.getElementById('summary-advisor')!.textContent = formData.advisor ? 'Sí' : 'No';
+    };
+    
+    // Handle next button
+    nextBtn?.addEventListener('click', () => {
+      if (validateStep(currentStep)) {
+        currentStep++;
+        updateStep();
+      }
+    });
+    
+    // Handle prev button
+    prevBtn?.addEventListener('click', () => {
+      currentStep--;
+      updateStep();
+    });
+    
+    // Handle submit
+    submitBtn?.addEventListener('click', () => {
+      formData.additionalMessage = (document.getElementById('additional-message') as HTMLTextAreaElement).value;
+      
+      // Build WhatsApp message
+      const productLabels: Record<string, string> = {
+        'gallinas-ponedoras': 'Gallinas ponedoras',
+        'pollos-engorde': 'Pollos de engorde',
+        'huevos': 'Huevos frescos',
+        'cerdos': 'Cerdos lechones',
+        'alimentos': 'Alimentos balanceados',
+        'otros': 'Otros productos'
+      };
+      
+      const serviceLabels: Record<string, string> = {
+        'vacunacion': 'Vacunación',
+        'despique': 'Despique',
+        'visitas-tecnicas': 'Visitas técnicas',
+        'asesoria': 'Asesoría técnica',
+        'capacitacion': 'Capacitación',
+        'ninguno': 'Solo productos'
+      };
+      
+      let message = `¡Hola Granjas Maysol!\n\n`;
+      message += `Mi nombre es: ${formData.name}\n`;
+      message += `Teléfono: +502 ${formatPhone(formData.phone)}\n`;
+      message += `Ubicación: ${formData.municipality}, ${formData.region}\n\n`;
+      message += `Producto de interés: ${productLabels[formData.product]}\n`;
+      message += `Servicio requerido: ${serviceLabels[formData.service]}\n`;
+      
+      if (formData.advisor) {
+        message += `Solicito contacto con asesor técnico\n`;
+      }
+      
+      if (formData.additionalMessage) {
+        message += `\nInformación adicional:\n${formData.additionalMessage}`;
+      }
+      
+      message += `\n\nEnviado desde formulario web de Granjas Maysol`;
+      
+      // Use the first available number
+      const whatsappUrl = `https://wa.me/${whatsappNumbers[0]}?text=${encodeURIComponent(message)}`;
       window.open(whatsappUrl, '_blank');
       
-      // Reset form and close modal
-      formData = { name: '', interest: '', location: '', message: '' };
-      errors = {};
-      form?.reset();
+      // Close modal and reset
       hideModal();
+    });
+    
+    // Product selection styling
+    document.querySelectorAll('.product-radio').forEach(radio => {
+      radio.addEventListener('change', (e) => {
+        // Reset all product styles
+        document.querySelectorAll('.product-option').forEach(option => {
+          option.classList.remove('border-maysol-orange', 'bg-maysol-orange/20');
+          option.classList.add('border-gray-300');
+        });
+        document.querySelectorAll('.product-radio-visual').forEach(visual => {
+          visual.classList.remove('border-maysol-orange');
+          visual.classList.add('border-gray-400');
+        });
+        document.querySelectorAll('.product-radio-dot').forEach(dot => dot.classList.add('hidden'));
+        
+        // Apply selected style
+        const target = e.target as HTMLInputElement;
+        if (target.checked) {
+          const container = target.closest('.product-option-container');
+          const option = container?.querySelector('.product-option');
+          const visual = container?.querySelector('.product-radio-visual');
+          const dot = container?.querySelector('.product-radio-dot');
+          
+          option?.classList.remove('border-gray-300');
+          option?.classList.add('border-maysol-orange', 'bg-maysol-orange/20');
+          visual?.classList.remove('border-gray-400');
+          visual?.classList.add('border-maysol-orange');
+          dot?.classList.remove('hidden');
+        }
+      });
+    });
+    
+    // Service selection styling
+    document.querySelectorAll('.service-radio').forEach(radio => {
+      radio.addEventListener('change', (e) => {
+        // Reset all service styles
+        document.querySelectorAll('.service-option').forEach(option => {
+          option.classList.remove('border-maysol-orange', 'bg-maysol-orange/20');
+          option.classList.add('border-gray-300');
+        });
+        document.querySelectorAll('.service-radio-visual').forEach(visual => {
+          visual.classList.remove('border-maysol-orange');
+          visual.classList.add('border-gray-400');
+        });
+        document.querySelectorAll('.service-radio-dot').forEach(dot => dot.classList.add('hidden'));
+        
+        // Apply selected style
+        const target = e.target as HTMLInputElement;
+        if (target.checked) {
+          const container = target.closest('.service-option-container');
+          const option = container?.querySelector('.service-option');
+          const visual = container?.querySelector('.service-radio-visual');
+          const dot = container?.querySelector('.service-radio-dot');
+          
+          option?.classList.remove('border-gray-300');
+          option?.classList.add('border-maysol-orange', 'bg-maysol-orange/20');
+          visual?.classList.remove('border-gray-400');
+          visual?.classList.add('border-maysol-orange');
+          dot?.classList.remove('hidden');
+        }
+      });
+    });
+    
+    // Region selection handler
+    const regionSelect = document.getElementById('region-select') as HTMLSelectElement;
+    const municipalitySelect = document.getElementById('municipality-select') as HTMLSelectElement;
+    
+    // Guatemala regions data
+    const guatemalaRegions: {[key: string]: string[]} = {
+      "Occidental": ["Quetzaltenango", "San Marcos", "Huehuetenango", "Totonicapán", "Sololá"],
+      "Sur Occidental": ["Retalhuleu", "Suchitepéquez"],
+      "Central": ["Chimaltenango", "Escuintla", "Guatemala", "Sacatepéquez"],
+      "Sur Oriental": ["Santa Rosa", "Jutiapa"],
+      "Oriental": ["Jalapa", "Chiquimula", "Zacapa", "El Progreso", "Izabal"],
+      "Norte": ["Quiché", "Alta Verapaz", "Baja Verapaz", "Petén"]
     };
     
-    // Handle input changes
-    const handleInputChange = (field: keyof typeof formData, value: string) => {
-      formData[field] = value;
-      if (errors[field]) {
-        delete errors[field];
-        const errorElement = document.querySelector(`.error-${field}`);
-        errorElement?.classList.add('hidden');
+    regionSelect?.addEventListener('change', (e) => {
+      const selectedRegion = (e.target as HTMLSelectElement).value;
+      
+      // Clear municipality selection
+      municipalitySelect.innerHTML = '<option value="">Selecciona tu municipio...</option>';
+      
+      if (selectedRegion && guatemalaRegions[selectedRegion]) {
+        // Enable municipality select
+        municipalitySelect.disabled = false;
+        
+        // Add municipalities for selected region
+        guatemalaRegions[selectedRegion].forEach((municipality: string) => {
+          const option = document.createElement('option');
+          option.value = municipality;
+          option.textContent = municipality;
+          municipalitySelect.appendChild(option);
+        });
+      } else {
+        // Disable municipality select if no region selected
+        municipalitySelect.disabled = true;
       }
-    };
+    });
     
-    // Event listeners
+    // Phone input formatting
+    const phoneInput = document.getElementById('phone-input') as HTMLInputElement;
+    phoneInput?.addEventListener('input', (e) => {
+      const target = e.target as HTMLInputElement;
+      let value = target.value.replace(/\D/g, '');
+      
+      if (value.length > 8) {
+        value = value.slice(0, 8);
+      }
+      
+      if (value.length >= 4) {
+        value = value.slice(0, 4) + '-' + value.slice(4);
+      }
+      
+      target.value = value;
+    });
+    
+    // Modal controls
     modalBackdrop?.addEventListener('click', hideModal);
     modalCloseBtn?.addEventListener('click', hideModal);
-    form?.addEventListener('submit', handleSubmit);
-    
-    // Input event listeners
-    const nameInput = form?.querySelector('input[name="name"]');
-    const interestSelect = form?.querySelector('select[name="interest"]');
-    const locationInput = form?.querySelector('input[name="location"]');
-    const messageTextarea = form?.querySelector('textarea[name="message"]');
-    
-    nameInput?.addEventListener('input', (e) => handleInputChange('name', (e.target as HTMLInputElement)?.value || ''));
-    interestSelect?.addEventListener('change', (e) => handleInputChange('interest', (e.target as HTMLSelectElement)?.value || ''));
-    locationInput?.addEventListener('input', (e) => handleInputChange('location', (e.target as HTMLInputElement)?.value || ''));
-    messageTextarea?.addEventListener('input', (e) => handleInputChange('message', (e.target as HTMLTextAreaElement)?.value || ''));
     
     // ESC key to close
     document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && (modal as HTMLDialogElement)?.open) {
+      if (e.key === 'Escape' && modal?.open) {
         hideModal();
       }
     });
     
-    // Close on backdrop click
-    modal?.addEventListener('click', (e) => {
-      if (e.target === modal) {
-        hideModal();
-      }
-    });
-    
-    // Set up modal triggers
+    // Setup modal triggers
     const setupModalTriggers = () => {
-      const triggers = document.querySelectorAll('#whatsapp-trigger, .mobile-whatsapp-trigger, #hero-whatsapp-btn, #floating-whatsapp');
+      const triggers = document.querySelectorAll('#whatsapp-trigger, .mobile-whatsapp-trigger, #hero-whatsapp-btn, #floating-whatsapp, #contact-whatsapp, #faq-whatsapp, #services-cta, #empty-state-whatsapp');
       
       triggers.forEach(trigger => {
         trigger.addEventListener('click', (e) => {
@@ -287,7 +910,7 @@ const productOptions = [
 </script>
 
 <style>
-  /* Modern modal animations inspired by Next.js version */
+  /* Modal animations */
   #whatsapp-modal[open] {
     animation: modalFadeIn 0.3s ease-out;
   }
@@ -297,12 +920,8 @@ const productOptions = [
   }
   
   @keyframes modalFadeIn {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
+    from { opacity: 0; }
+    to { opacity: 1; }
   }
   
   @keyframes modalSlideIn {
@@ -316,16 +935,36 @@ const productOptions = [
     }
   }
   
-  /* Custom input focus styles */
+  /* Custom scrollbar */
+  #chat-container {
+    scrollbar-width: thin;
+    scrollbar-color: #da3414 #f1f5f9;
+  }
+  
+  #chat-container::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  #chat-container::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 10px;
+  }
+  
+  #chat-container::-webkit-scrollbar-thumb {
+    background: #da3414;
+    border-radius: 10px;
+  }
+  
+  /* Input focus styles */
   #whatsapp-modal input:focus,
   #whatsapp-modal select:focus,
   #whatsapp-modal textarea:focus {
     border-color: #da3414 !important;
-    outline: 2px solid rgba(218, 52, 20, 0.5) !important;
+    outline: 2px solid rgba(218, 52, 20, 0.3) !important;
     outline-offset: -2px !important;
   }
   
-  /* Ensure proper text colors */
+  /* Text colors */
   #whatsapp-modal input,
   #whatsapp-modal select,
   #whatsapp-modal textarea {
@@ -336,5 +975,40 @@ const productOptions = [
   #whatsapp-modal option {
     color: #1f2937 !important;
     background-color: white !important;
+  }
+
+  /* Selection animations */
+  .product-option, .service-option {
+    transition: all 0.2s ease;
+  }
+  
+  .product-radio-visual, .service-radio-visual {
+    transition: all 0.2s ease;
+  }
+  
+  .product-radio-dot, .service-radio-dot {
+    transition: all 0.2s ease;
+  }
+
+  /* Select styling */
+  select:disabled {
+    background-color: #f9fafb;
+    cursor: not-allowed;
+  }
+
+  /* Step animations */
+  #step-1, #step-2, #step-3, #step-4, #step-5 {
+    animation: slideInUp 0.4s ease-out;
+  }
+  
+  @keyframes slideInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 </style>
