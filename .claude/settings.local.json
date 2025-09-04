@@ -1,7 +1,17 @@
 {
   "permissions": {
     "allow": [
-      "Read(/var/folders/zd/t10g5trj2w3_mcq96hp32n600000gn/T/TemporaryItems/NSIRD_screencaptureui_gczNmb/**)"
+      "Read(/var/folders/zd/t10g5trj2w3_mcq96hp32n600000gn/T/TemporaryItems/NSIRD_screencaptureui_gczNmb/**)",
+      "WebSearch",
+      "WebFetch(domain:academy.borderless-japan.com)",
+      "Read(/Users/granjasmaysol/Downloads/**)",
+      "Read(/Users/granjasmaysol/Downloads/**)",
+      "Read(/Users/granjasmaysol/Downloads/**)",
+      "Read(/var/folders/zd/t10g5trj2w3_mcq96hp32n600000gn/T/TemporaryItems/NSIRD_screencaptureui_zjPkol/**)",
+      "Read(/Users/granjasmaysol/Downloads/**)",
+      "Read(/var/folders/zd/t10g5trj2w3_mcq96hp32n600000gn/T/TemporaryItems/NSIRD_screencaptureui_tTEniB/**)",
+      "Read(/var/folders/zd/t10g5trj2w3_mcq96hp32n600000gn/T/TemporaryItems/NSIRD_screencaptureui_q3bVwD/**)",
+      "Read(/var/folders/zd/t10g5trj2w3_mcq96hp32n600000gn/T/TemporaryItems/NSIRD_screencaptureui_fj6ZmT/**)"
     ],
     "deny": [],
     "ask": []

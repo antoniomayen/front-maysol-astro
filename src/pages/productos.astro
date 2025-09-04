@@ -1,31 +1,46 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import NavbarPages from '../components/layout/NavbarPages.astro';
+import Footer from '../layouts/Footer.astro';
+import ContactSection from '../components/sections/ContactSection.astro';
 import ProductCard from '../components/ui/ProductCard.astro';
 import WhatsAppModal from '../components/ui/WhatsAppModal.astro';
 import FloatingWhatsAppButton from '../components/ui/FloatingWhatsAppButton.astro';
-import { getProducts, type Product } from '../lib/strapi';
+import { getProducts, type Product, categoryLabels } from '../lib/strapi';
 
-// Get page parameters
+// Get page and filter parameters
 const url = Astro.url;
 const pageParam = url.searchParams.get('page') || '1';
-const pageSizeParam = url.searchParams.get('size') || '10';
+const pageSizeParam = url.searchParams.get('size') || '4';
+const categoryParam = url.searchParams.get('category') || '';
+const availableParam = url.searchParams.get('available') || '';
+const searchParam = url.searchParams.get('search') || '';
 
 // Parse and validate parameters
 const currentPage = Math.max(1, parseInt(pageParam));
-const pageSize = [10, 25, 50].includes(parseInt(pageSizeParam)) ? parseInt(pageSizeParam) : 10;
+const pageSize = [4, 12, 24].includes(parseInt(pageSizeParam)) ? parseInt(pageSizeParam) : 4;
 
-// Fetch products with pagination
+// Build filters
+const filters: any = {};
+if (categoryParam) {
+  filters.category = { $eq: categoryParam };
+}
+if (availableParam === 'true') {
+  filters.available = { $eq: true };
+} else if (availableParam === 'false') {
+  filters.available = { $eq: false };
+}
+if (searchParam) {
+  filters.name = { $containsi: searchParam };
+}
+
+// Fetch products with pagination and filters
 let products: Product[] = [];
 let pagination = { page: 1, pageCount: 1, total: 0 };
 
 try {
   const response = await getProducts({
-    filters: {
-      available: {
-        $eq: true
-      }
-    },
+    filters,
     populate: '*',
     sort: ['featured:desc', 'createdAt:desc'],
     pagination: {
@@ -43,20 +58,17 @@ try {
 // Generate page numbers for pagination
 const generatePageNumbers = (current: number, total: number) => {
   const pages: (number | string)[] = [];
-  const delta = 2; // Show 2 pages before and after current
+  const delta = 2;
   
-  // Always show first page
   if (current > delta + 1) {
     pages.push(1);
     if (current > delta + 2) pages.push('...');
   }
   
-  // Show pages around current
   for (let i = Math.max(1, current - delta); i <= Math.min(total, current + delta); i++) {
     pages.push(i);
   }
   
-  // Always show last page
   if (current < total - delta) {
     if (current < total - delta - 1) pages.push('...');
     pages.push(total);
@@ -68,181 +80,383 @@ const generatePageNumbers = (current: number, total: number) => {
 const pageNumbers = generatePageNumbers(currentPage, pagination.pageCount);
 
 // Helper function to build URL with parameters
-const buildPageUrl = (page: number, size: number = pageSize) => {
-  const params = new URLSearchParams();
-  params.set('page', page.toString());
-  params.set('size', size.toString());
-  return `/productos?${params.toString()}`;
+const buildPageUrl = (page: number, params?: Record<string, string>) => {
+  const urlParams = new URLSearchParams();
+  urlParams.set('page', page.toString());
+  urlParams.set('size', pageSize.toString());
+  
+  if (categoryParam) urlParams.set('category', categoryParam);
+  if (availableParam) urlParams.set('available', availableParam);
+  if (searchParam) urlParams.set('search', searchParam);
+  
+  if (params) {
+    Object.entries(params).forEach(([key, value]) => {
+      if (value) {
+        urlParams.set(key, value);
+      } else {
+        urlParams.delete(key);
+      }
+    });
+  }
+  
+  return `/productos?${urlParams.toString()}`;
 };
 
 export const prerender = false;
 ---
 
 <Layout 
-  title="Productos" 
+  title="Productos - Granjas Maysol" 
   description="Catálogo completo de productos avícolas y porcinos de Granjas Maysol. Gallinas, pollos, cerdos, huevos, alimentos y accesorios de la más alta calidad."
 >
+  <link rel="stylesheet" href="/src/styles/productos.css">
+  
   <NavbarPages />
   
-  <main class="min-h-screen bg-white">
-    <!-- Breadcrumbs -->
-    <div class="bg-gray-50 py-4">
+  <main class="min-h-screen bg-gray-50">
+    <!-- Header con búsqueda -->
+    <section class="bg-gray-200 border-b border-gray-200 py-8">
       <div class="container-global">
-        <div class="breadcrumbs text-sm">
+        <!-- Breadcrumbs -->
+        <div class="breadcrumbs text-sm mb-6">
           <ul>
             <li><a href="/">Inicio</a></li>
             <li class="font-semibold">Productos</li>
           </ul>
         </div>
-      </div>
-    </div>
-    
-    <!-- Header -->
-    <section class="py-12">
-      <div class="container-global">
+
         <div class="text-center mb-8">
-          <h1 class="text-3xl lg:text-4xl font-bold mb-4">
+          <h1 class="text-4xl lg:text-5xl font-bold mb-4 text-gray-900">
             Nuestros Productos
           </h1>
-          <p class="text-lg text-gray-700 max-w-2xl mx-auto">
+          <p class="text-lg text-gray-600 max-w-2xl mx-auto">
             Explora nuestro catálogo completo de productos de alta calidad para tu producción avícola y porcina
           </p>
         </div>
 
-        <!-- Results info and page size selector -->
-        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
-          <div class="text-sm text-gray-700">
-            Mostrando {products.length > 0 ? ((currentPage - 1) * pageSize + 1) : 0} - {Math.min(currentPage * pageSize, pagination.total)} de {pagination.total} productos
+        <!-- Barra de búsqueda -->
+        <div class="flex justify-center mb-6">
+          <div class="search-container">
+            <input
+              type="text"
+              id="search-input"
+              placeholder="Buscar un producto..."
+              value={searchParam}
+              class="search-input"
+            />
+            {searchParam && (
+              <button id="clear-search" class="search-clear" aria-label="Limpiar búsqueda">
+                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            )}
+            <button id="search-button" class="search-button" aria-label="Buscar">
+              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+            </button>
           </div>
-          
-          <div class="flex items-center gap-2">
-            <span class="text-sm text-gray-700">Mostrar:</span>
-            <select 
-              class="select select-bordered select-sm bg-white text-gray-700"
-              id="page-size-selector"
-              value={pageSize}
-            >
-              <option value="10" selected={pageSize === 10}>10</option>
-              <option value="25" selected={pageSize === 25}>25</option>
-              <option value="50" selected={pageSize === 50}>50</option>
-            </select>
-            <span class="text-sm text-gray-700">por página</span>
+        </div>
+
+        <!-- Filtros activos -->
+        {(categoryParam || searchParam) && (
+          <div class="active-filters flex justify-center">
+            {searchParam && (
+              <div class="filter-chip">
+                <span>Búsqueda: "{searchParam}"</span>
+                <a href={buildPageUrl(1, { search: '' })} class="filter-chip-remove">
+                  <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </a>
+              </div>
+            )}
+            {categoryParam && (
+              <div class="filter-chip">
+                <span>{categoryLabels[categoryParam] || categoryParam}</span>
+                <a href={buildPageUrl(1, { category: '' })} class="filter-chip-remove">
+                  <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </a>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+    </section>
+
+    <!-- Contenido principal -->
+    <section class="bg-white border-b border-gray-200 py-8">
+      <div class="container-global">
+        <div class="flex flex-col lg:flex-row gap-8">
+          <!-- Sidebar de filtros (desktop) -->
+          <aside class="hidden lg:block w-72 flex-shrink-0">
+            <div class="filters-container sticky top-4">
+              <h2 class="text-lg font-bold mb-4">Filtros</h2>
+              
+              <!-- Filtro por categoría -->
+              <div class="filter-group">
+                <div class="filter-label">
+                  <span>Categoría</span>
+                  <button class="filter-toggle expanded" data-target="category-options">
+                    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </button>
+                </div>
+                <div id="category-options" class="filter-options expanded">
+                  {Object.entries(categoryLabels).map(([value, label]) => (
+                    <label class="filter-option">
+                      <div class={`filter-checkbox ${categoryParam === value ? 'checked' : ''}`}></div>
+                      <span class="filter-option-label">{label}</span>
+                      <input 
+                        type="radio" 
+                        name="category" 
+                        value={value}
+                        checked={categoryParam === value}
+                        class="hidden"
+                        data-filter="category"
+                      />
+                    </label>
+                  ))}
+                  {categoryParam && (
+                    <label class="filter-option">
+                      <div class="filter-checkbox"></div>
+                      <span class="filter-option-label">Todas las categorías</span>
+                      <input 
+                        type="radio" 
+                        name="category" 
+                        value=""
+                        class="hidden"
+                        data-filter="category"
+                      />
+                    </label>
+                  )}
+                </div>
+              </div>
+
+            </div>
+          </aside>
+
+          <!-- Productos -->
+          <div class="flex-1">
+            <!-- Info de resultados -->
+            <div class="flex justify-between items-center mb-6">
+              <div class="text-sm text-gray-600" style="padding-left: 10px;">
+                {products.length > 0 ? (
+                  <span>
+                    Mostrando {((currentPage - 1) * pageSize + 1)} - {Math.min(currentPage * pageSize, pagination.total)} de {pagination.total} productos
+                  </span>
+                ) : (
+                  <span>No se encontraron productos</span>
+                )}
+              </div>
+              
+              <!-- Selector de cantidad por página -->
+              <div class="flex items-center gap-2">
+                <label for="page-size" class="text-sm text-gray-600">Mostrar:</label>
+                <select 
+                  id="page-size"
+                  class="select select-bordered select-sm bg-white"
+                  value={pageSize}
+                >
+                  <option value="4" selected={pageSize === 4}>4</option>
+                  <option value="12" selected={pageSize === 12}>12</option>
+                  <option value="24" selected={pageSize === 24}>24</option>
+                </select>
+              </div>
+            </div>
+
+            {products.length > 0 ? (
+              <>
+                <!-- Grid de productos -->
+                <div class="products-grid mb-12">
+                  {products.map((product) => (
+                    <ProductCard product={product} />
+                  ))}
+                </div>
+
+                <!-- Paginación -->
+                {pagination.pageCount > 1 && (
+                  <div class="pagination-container">
+                    <a 
+                      href={currentPage > 1 ? buildPageUrl(currentPage - 1) : '#'}
+                      class={`pagination-button pagination-arrow ${currentPage <= 1 ? 'disabled' : ''}`}
+                      aria-label="Página anterior"
+                    >
+                      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                      </svg>
+                    </a>
+
+                    {pageNumbers.map((pageNum) => (
+                      pageNum === '...' ? (
+                        <span class="pagination-ellipsis">...</span>
+                      ) : (
+                        <a 
+                          href={buildPageUrl(pageNum as number)}
+                          class={`pagination-button ${currentPage === pageNum ? 'active' : ''}`}
+                          aria-label={`Página ${pageNum}`}
+                        >
+                          {pageNum}
+                        </a>
+                      )
+                    ))}
+
+                    <a 
+                      href={currentPage < pagination.pageCount ? buildPageUrl(currentPage + 1) : '#'}
+                      class={`pagination-button pagination-arrow ${currentPage >= pagination.pageCount ? 'disabled' : ''}`}
+                      aria-label="Página siguiente"
+                    >
+                      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                      </svg>
+                    </a>
+                  </div>
+                )}
+              </>
+            ) : (
+              <!-- Estado vacío -->
+              <div class="text-center py-20">
+                <div class="max-w-md mx-auto">
+                  <svg class="w-20 h-20 mx-auto text-gray-400 mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2 2v-5m16 0h-2M4 13h2m13-8V4a1 1 0 00-1-1H7a1 1 0 00-1 1v1m8 0V4.5"></path>
+                  </svg>
+                  <h2 class="text-2xl font-bold text-gray-800 mb-4">
+                    No se encontraron productos
+                  </h2>
+                  <p class="text-gray-600 mb-8">
+                    {searchParam ? 
+                      `No encontramos productos que coincidan con "${searchParam}". Intenta con otros términos de búsqueda.` :
+                      'No hay productos disponibles con los filtros seleccionados. Intenta ajustar los filtros o contacta con nosotros.'}
+                  </p>
+                  <button id="empty-whatsapp" class="btn btn-success btn-lg">
+                    <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.1.824z"/>
+                    </svg>
+                    Consultar Disponibilidad
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Products Grid -->
-    <section class="pb-12">
-      <div class="container-global">
-        {products.length > 0 ? (
-          <>
-            <!-- Products Grid -->
-            <div class="flex flex-wrap justify-center gap-4 mb-12">
-              {products.map((product) => (
-                <ProductCard 
-                  product={product} 
-                  class="h-full"
-                />
-              ))}
-            </div>
-
-            <!-- Pagination -->
-            {pagination.pageCount > 1 && (
-              <div class="flex flex-col items-center gap-4">
-                <div class="join">
-                  <!-- Previous button -->
-                  <a 
-                    href={currentPage > 1 ? buildPageUrl(currentPage - 1) : '#'}
-                    class={`join-item btn ${currentPage <= 1 ? 'btn-disabled' : ''}`}
-                    aria-label="Página anterior"
-                  >
-                    «
-                  </a>
-
-                  <!-- Page numbers -->
-                  {pageNumbers.map((pageNum) => (
-                    pageNum === '...' ? (
-                      <button class="join-item btn btn-disabled">...</button>
-                    ) : (
-                      <a 
-                        href={buildPageUrl(pageNum as number)}
-                        class={`join-item btn ${currentPage === pageNum ? 'btn-active' : ''}`}
-                        aria-label={`Página ${pageNum}`}
-                      >
-                        {pageNum}
-                      </a>
-                    )
-                  ))}
-
-                  <!-- Next button -->
-                  <a 
-                    href={currentPage < pagination.pageCount ? buildPageUrl(currentPage + 1) : '#'}
-                    class={`join-item btn ${currentPage >= pagination.pageCount ? 'btn-disabled' : ''}`}
-                    aria-label="Página siguiente"
-                  >
-                    »
-                  </a>
-                </div>
-
-                <!-- Page info -->
-                <div class="text-sm text-gray-600">
-                  Página {currentPage} de {pagination.pageCount}
-                </div>
-              </div>
-            )}
-          </>
-        ) : (
-          <!-- Empty State -->
-          <div class="text-center py-20">
-            <div class="max-w-md mx-auto">
-              <svg class="w-20 h-20 mx-auto text-gray-400 mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2 2v-5m16 0h-2M4 13h2m13-8V4a1 1 0 00-1-1H7a1 1 0 00-1 1v1m8 0V4.5"></path>
-              </svg>
-              <h2 class="text-2xl font-bold text-gray-800 mb-4">
-                No se encontraron productos
-              </h2>
-              <p class="text-gray-700 mb-8">
-                Actualmente no tenemos productos disponibles en nuestro catálogo. Contáctanos para conocer nuestras opciones.
-              </p>
-              <button id="empty-catalog-whatsapp" class="btn btn-success btn-lg">
-                <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.1.824z"/>
-                </svg>
-                Consultar Productos Disponibles
-              </button>
-            </div>
-          </div>
-        )}
-      </div>
-    </section>
+    <!-- Botón de filtros móvil -->
+    <button id="mobile-filter-button" class="mobile-filter-button lg:hidden">
+      <svg class="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+      </svg>
+    </button>
   </main>
+
+  <!-- Sección de Contacto -->
+  <ContactSection />
+
+  <!-- Footer -->
+  <Footer />
 
   <!-- WhatsApp Components -->
   <WhatsAppModal />
   <FloatingWhatsAppButton />
 </Layout>
 
+<style>
+  @import '/src/styles/productos.css';
+</style>
+
 <script>
-  // Page size selector handler
-  document.getElementById('page-size-selector')?.addEventListener('change', (e) => {
-    const select = e.target as HTMLSelectElement;
-    const newSize = select.value;
+  // Búsqueda
+  const searchInput = document.getElementById('search-input') as HTMLInputElement;
+  const searchButton = document.getElementById('search-button');
+  const clearButton = document.getElementById('clear-search');
+
+  const performSearch = () => {
+    const searchValue = searchInput?.value.trim();
     const url = new URL(window.location.href);
-    url.searchParams.set('size', newSize);
-    url.searchParams.set('page', '1'); // Reset to first page
+    
+    if (searchValue) {
+      url.searchParams.set('search', searchValue);
+    } else {
+      url.searchParams.delete('search');
+    }
+    url.searchParams.set('page', '1');
+    window.location.href = url.toString();
+  };
+
+  searchButton?.addEventListener('click', performSearch);
+  searchInput?.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+      performSearch();
+    }
+  });
+
+  clearButton?.addEventListener('click', () => {
+    const url = new URL(window.location.href);
+    url.searchParams.delete('search');
+    url.searchParams.set('page', '1');
     window.location.href = url.toString();
   });
 
-  // Empty state WhatsApp trigger
-  document.getElementById('empty-catalog-whatsapp')?.addEventListener('click', () => {
+  // Cambio de tamaño de página
+  const pageSizeSelect = document.getElementById('page-size') as HTMLSelectElement;
+  pageSizeSelect?.addEventListener('change', (e) => {
+    const select = e.target as HTMLSelectElement;
+    const url = new URL(window.location.href);
+    url.searchParams.set('size', select.value);
+    url.searchParams.set('page', '1');
+    window.location.href = url.toString();
+  });
+
+  // Filtros
+  const filterInputs = document.querySelectorAll('input[data-filter]');
+  filterInputs.forEach(input => {
+    input.addEventListener('change', (e) => {
+      const target = e.target as HTMLInputElement;
+      const filterType = target.dataset.filter;
+      const value = target.value;
+      const url = new URL(window.location.href);
+      
+      if (value) {
+        url.searchParams.set(filterType!, value);
+      } else {
+        url.searchParams.delete(filterType!);
+      }
+      url.searchParams.set('page', '1');
+      window.location.href = url.toString();
+    });
+  });
+
+  // Toggle de grupos de filtros
+  const filterToggles = document.querySelectorAll('.filter-toggle');
+  filterToggles.forEach(toggle => {
+    toggle.addEventListener('click', () => {
+      const target = toggle.getAttribute('data-target');
+      const options = document.getElementById(target!);
+      
+      toggle.classList.toggle('expanded');
+      options?.classList.toggle('expanded');
+    });
+  });
+
+  // WhatsApp para estado vacío
+  document.getElementById('empty-whatsapp')?.addEventListener('click', () => {
     const modal = document.getElementById('whatsapp-modal') as HTMLDialogElement;
     if (modal) {
       const messageTextarea = modal.querySelector('textarea[name="message"]') as HTMLTextAreaElement;
       if (messageTextarea) {
-        messageTextarea.value = 'Me gustaría conocer qué productos tienen disponibles actualmente en su catálogo.';
+        messageTextarea.value = 'Hola, me gustaría consultar sobre la disponibilidad de productos.';
       }
       modal.showModal();
     }
+  });
+
+  // Mobile filter modal (placeholder para futura implementación)
+  document.getElementById('mobile-filter-button')?.addEventListener('click', () => {
+    alert('Los filtros móviles se mostrarán aquí. Por ahora, usa la versión de escritorio.');
   });
 </script>

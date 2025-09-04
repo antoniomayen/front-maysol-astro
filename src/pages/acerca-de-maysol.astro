@@ -1,0 +1,510 @@
+---
+import Layout from '../layouts/Layout.astro';
+import NavbarPages from '../components/layout/NavbarPages.astro';
+import Footer from '../layouts/Footer.astro';
+import ContactSection from '../components/sections/ContactSection.astro';
+import WhatsAppModal from '../components/ui/WhatsAppModal.astro';
+import FloatingWhatsAppButton from '../components/ui/FloatingWhatsAppButton.astro';
+import '../styles/acerca-de-maysol-modern.css';
+
+// SEO optimizado para instituciones y organizaciones
+const seoTitle = "Proveedor Estratégico Pecuario para Municipalidades y Organizaciones | Granjas Maysol";
+const seoDescription = "Socio técnico especializado en desarrollo pecuario sostenible. Ejecutamos proyectos productivos con municipalidades, organizaciones rurales y cooperativas en el altiplano occidental. Acompañamiento integral desde levante hasta comercialización.";
+const seoKeywords = "proveedor pecuario municipalidades Guatemala, proyectos productivos rurales, desarrollo pecuario sostenible, alimento balanceado Guatemala, núcleos concentrados, asistencia técnica pecuaria, proyectos avícolas municipales, proyectos porcinos Guatemala, cooperación desarrollo rural, COMUDE proyectos productivos";
+---
+
+<Layout 
+  title={seoTitle}
+  description={seoDescription}
+  keywords={seoKeywords}
+>
+  <!-- Header y Navegación -->
+  <NavbarPages />
+  
+  <main>
+    <!-- Hero Section: Propuesta de Valor Institucional - Diseño Moderno -->
+    <section class="modern-hero py-20 lg:py-28" id="acercademaysol">
+        <div class="max-content-width-padded relative z-10">
+            <div class="text-center mb-20">
+                <h1 class="text-5xl lg:text-6xl xl:text-7xl font-bold mb-8 leading-tight">
+                    <span class="modern-title floating-element">
+                        Socio Estratégico
+                    </span>
+                    <br>
+                    <span class="text-charcoal">en Desarrollo Pecuario Sostenible</span>
+                </h1>
+                <p class="text-xl lg:text-2xl text-slate-gray max-w-5xl mx-auto leading-relaxed">
+                    Ejecutamos proyectos productivos integrales con <strong class="modern-title">municipalidades</strong>, 
+                    <strong class="modern-title">organizaciones rurales</strong> y <strong class="text-charcoal">cooperativas</strong> 
+                    en el altiplano occidental de Guatemala desde 2017
+                </p>
+            </div>
+            
+            <!-- Estadísticas clave con diseño moderno -->
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-10">
+                <div class="stat-card glow-on-hover">
+                    <div class="stat-number">7+</div>
+                    <div class="text-sm font-bold text-warm-gray uppercase tracking-wider">Años de experiencia</div>
+                </div>
+                
+                <div class="stat-card glow-on-hover">
+                    <div class="stat-number">500+</div>
+                    <div class="text-sm font-bold text-warm-gray uppercase tracking-wider">Productores capacitados</div>
+                </div>
+                
+                <div class="stat-card glow-on-hover">
+                    <div class="stat-number">15+</div>
+                    <div class="text-sm font-bold text-warm-gray uppercase tracking-wider">Municipalidades atendidas</div>
+                </div>
+                
+                <div class="stat-card glow-on-hover">
+                    <div class="stat-number">5</div>
+                    <div class="text-sm font-bold text-warm-gray uppercase tracking-wider">Departamentos cubiertos</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección: Nuestra Solución Integral - Diseño Moderno de Pasos -->
+    <section class="rich-section pt-24 pb-32 lg:pt-40 lg:pb-56 relative overflow-hidden">
+        <div class="max-content-width-padded relative z-10">
+            <div class="text-center mb-20">
+                <h2 class="text-4xl lg:text-5xl font-bold modern-title mb-8">
+                    Modelo Integral de Granjas Maysol
+                </h2>
+                <p class="text-xl lg:text-2xl text-slate-gray max-w-4xl mx-auto leading-relaxed">
+                    Transformamos proyectos productivos en <strong class="modern-title">emprendimientos sostenibles</strong> 
+                    mediante un sistema de acompañamiento técnico permanente
+                </p>
+            </div>
+            
+            <!-- Modern Step Design -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-start">
+                
+                <!-- Paso 1 -->
+                <div class="group relative">
+                    <div class="step-card">
+                        <div class="step-content">
+                            <!-- Step Number with Gradient -->
+                            <div class="flex items-center mb-8">
+                                <div class="step-number">1</div>
+                                <div class="ml-6 flex-1">
+                                    <div class="step-label">PASO 01</div>
+                                    <h3 class="step-title">Levante y Preparación</h3>
+                                </div>
+                            </div>
+                            
+                            <p class="step-description">
+                                Ejecutamos el proceso completo de levante para municipalidades. Entregamos animales en 
+                                <strong class="text-charcoal">punto óptimo de producción</strong> (16-18 semanas en ponedoras).
+                            </p>
+                            
+                            <div class="feature-list">
+                                <div class="feature-item">
+                                    <div class="feature-dot"></div>
+                                    <span>Manejo sanitario completo con protocolos veterinarios</span>
+                                </div>
+                                <div class="feature-item">
+                                    <div class="feature-dot"></div>
+                                    <span>Alimentación especializada por etapa de desarrollo</span>
+                                </div>
+                                <div class="feature-item">
+                                    <div class="feature-dot"></div>
+                                    <span>Selección genética adaptada al altiplano occidental</span>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-6">
+                                <img 
+                                    src="/images/acercaDeMaysol/gallinas postura.jpeg" 
+                                    alt="Gallinas de postura en proceso de levante" 
+                                    class="w-full h-64 object-cover rounded-xl shadow-lg"
+                                    loading="lazy"
+                                >
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Paso 2 -->
+                <div class="group relative lg:mt-32">
+                    <div class="step-card step-intersection-down">
+                        <div class="step-content">
+                            <div class="flex items-center mb-8">
+                                <div class="step-number">2</div>
+                                <div class="ml-6 flex-1">
+                                    <div class="step-label">PASO 02</div>
+                                    <h3 class="step-title">Transferencia y Capacitación</h3>
+                                </div>
+                            </div>
+                            
+                            <p class="step-description">
+                                Capacitación intensiva en <strong class="text-charcoal">gestión empresarial pecuaria</strong>. 
+                                Los beneficiarios aprenden a administrar un negocio productivo.
+                            </p>
+                            
+                            <div class="feature-list">
+                                <div class="feature-item">
+                                    <div class="feature-dot"></div>
+                                    <span>Talleres de manejo productivo y sanitario</span>
+                                </div>
+                                <div class="feature-item">
+                                    <div class="feature-dot"></div>
+                                    <span>Formación en registros productivos y contables</span>
+                                </div>
+                                <div class="feature-item">
+                                    <div class="feature-dot"></div>
+                                    <span>Análisis de costos y punto de equilibrio</span>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-6">
+                                <img 
+                                    src="/images/acercaDeMaysol/capacitacion.jpeg" 
+                                    alt="Capacitación técnica con productores rurales" 
+                                    class="w-full h-64 object-cover rounded-xl shadow-lg"
+                                    loading="lazy"
+                                >
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Paso 3 -->
+                <div class="step-card">
+                    <div class="step-content">
+                        <div class="flex items-center mb-6">
+                            <div class="step-number">
+                                3
+                            </div>
+                            <div class="ml-4 flex-1">
+                                <div class="step-label">PASO 03</div>
+                                <h3 class="step-title">Acompañamiento Permanente</h3>
+                            </div>
+                        </div>
+                        
+                        <p class="step-description">
+                            Nuestro compromiso <strong class="text-charcoal">continúa después de la entrega</strong>. 
+                            Visitas técnicas mensuales con zootecnistas especializados.
+                        </p>
+                        
+                        <div class="feature-list">
+                            <div class="feature-item">
+                                <div class="feature-dot"></div>
+                                <span>Visitas en granja por zootecnistas certificados</span>
+                            </div>
+                            <div class="feature-item">
+                                <div class="feature-dot"></div>
+                                <span>Ajuste de fórmulas según condiciones locales</span>
+                            </div>
+                            <div class="feature-item">
+                                <div class="feature-dot"></div>
+                                <span>Optimización continua de conversión alimenticia</span>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-6">
+                            <img 
+                                src="/images/acercaDeMaysol/desarrollo de proyectos.jpeg" 
+                                alt="Desarrollo de proyectos y visita técnica en granja" 
+                                class="w-full h-64 object-cover rounded-xl shadow-lg"
+                                loading="lazy"
+                            >
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Paso 4 -->
+                <div class="step-card step-intersection-down lg:mt-32">
+                    <div class="step-content">
+                        <div class="flex items-center mb-6">
+                            <div class="step-number">
+                                4
+                            </div>
+                            <div class="ml-4 flex-1">
+                                <div class="step-label">PASO 04</div>
+                                <h3 class="step-title">Conexión con Mercados</h3>
+                            </div>
+                        </div>
+                        
+                        <p class="step-description">
+                            Facilitamos el <strong class="text-charcoal">acceso a mercados formales</strong> y desarrollamos 
+                            capacidades de negociación para obtener precios justos.
+                        </p>
+                        
+                        <div class="feature-list">
+                            <div class="feature-item">
+                                <div class="feature-dot"></div>
+                                <span>Vinculación con compradores institucionales</span>
+                            </div>
+                            <div class="feature-item">
+                                <div class="feature-dot"></div>
+                                <span>Desarrollo de marca y presentación de productos</span>
+                            </div>
+                            <div class="feature-item">
+                                <div class="feature-dot"></div>
+                                <span>Estrategias de comercialización colectiva</span>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-6">
+                            <img 
+                                src="/images/acercaDeMaysol/mercado.jpeg" 
+                                alt="Cerdos y pollos - Comercialización exitosa" 
+                                class="w-full h-64 object-cover rounded-xl shadow-lg"
+                                loading="lazy"
+                            >
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Visual connector between steps (decorative) -->
+            <div class="hidden lg:block absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 z-0">
+                <svg width="300" height="400" viewBox="0 0 300 400" class="opacity-10">
+                    <defs>
+                        <linearGradient id="pathGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#da3414;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#20bf6b;stop-opacity:1" />
+                        </linearGradient>
+                    </defs>
+                    <path d="M50,50 Q150,100 250,150 Q150,200 50,250 Q150,300 250,350" 
+                          stroke="url(#pathGradient)" 
+                          stroke-width="3" 
+                          fill="none" 
+                          stroke-dasharray="10,5" />
+                </svg>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección: Ventajas Competitivas -->
+    <section class="advantages-section pt-24 pb-32 lg:pt-40 lg:pb-56 relative overflow-hidden">
+        <div class="max-content-width-padded relative z-10">
+            <div class="text-center mb-20">
+                     <h2 class="text-4xl lg:text-5xl font-bold modern-title mb-8">
+                Ventajas Competitivas para su Institución
+            </h2>
+            </div>
+            
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Ventaja 1 -->
+                <div class="advantage-card">
+                    <h3 class="text-xl font-bold text-primary-maysol mb-4">
+                        Fórmulas Regionales Especializadas
+                    </h3>
+                    <p class="text-slate-gray mb-4">
+                        A diferencia de proveedores nacionales con fórmulas genéricas, nuestros productos están 
+                        <strong class="text-charcoal">específicamente formulados para los microclimas del altiplano occidental</strong>.
+                    </p>
+                    <div class="feature-list">
+                        <div class="feature-item">
+                            <div class="feature-dot"></div>
+                            <span>Adaptación a altitudes de 2,000-3,000 msnm</span>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-dot"></div>
+                            <span>Formulación para microclimas del altiplano occidental</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ventaja 2 -->
+                <div class="advantage-card step-intersection-down lg:mt-16">
+                    <h3 class="text-xl font-bold text-secondary-maysol mb-4">
+                        Experiencia Comprobada en Proyectos Institucionales
+                    </h3>
+                    <p class="text-slate-gray mb-4">
+                        <strong class="text-charcoal">7 años ejecutando proyectos exitosos</strong> con municipalidades, 
+                        COMUDE, cooperativas y organizaciones de desarrollo rural.
+                    </p>
+                    <div class="feature-list">
+                        <div class="feature-item">
+                            <div class="feature-dot"></div>
+                            <span>Cumplimiento de normativas SNIP y Contraloría</span>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-dot"></div>
+                            <span>Referencias verificables de proyectos anteriores</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ventaja 3 -->
+                <div class="advantage-card">
+                    <h3 class="text-xl font-bold text-maysol-orange mb-4">
+                        Reducción de Riesgos del Proyecto
+                    </h3>
+                    <p class="text-slate-gray mb-4">
+                        Nuestro modelo de intervención <strong class="text-charcoal">reduce la tasa de fracaso del 60% al 15%</strong> 
+                        mediante acompañamiento técnico permanente.
+                    </p>
+                    <div class="feature-list">
+                        <div class="feature-item">
+                            <div class="feature-dot"></div>
+                            <span>Acompañamiento técnico permanente</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ventaja 4 -->
+                <div class="advantage-card step-intersection-down lg:mt-16">
+                    <h3 class="text-xl font-bold text-maysol-orange mb-4">
+                        Distribución Directa de Núcleos Innovaciones
+                    </h3>
+                    <p class="text-slate-gray mb-4">
+                        Somos <strong class="text-charcoal">distribuidores exclusivos para el occidente</strong> de 
+                        Núcleos Innovaciones, líder centroamericano en nutrición animal.
+                    </p>
+                    <div class="feature-list">
+                        <div class="feature-item">
+                            <div class="feature-dot"></div>
+                            <span>Precios directos sin intermediarios</span>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-dot"></div>
+                            <span>Disponibilidad inmediata de inventario</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección: Cobertura y Alcance -->
+    <section class="rich-section py-12 lg:py-16 relative overflow-hidden">
+        <div class="max-content-width-padded">
+        <div class="max-content-width-padded relative z-10">
+            <div class="text-center mb-20">
+                <h2 class="text-4xl lg:text-5xl font-bold modern-title mb-8">
+                    Cobertura Regional y Capacidad Operativa
+                </h2>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div class="flex flex-col justify-center">
+                    <h3 class="text-xl font-bold text-primary-maysol mb-4">
+                        Presencia en el Altiplano Occidental
+                    </h3>
+                    <p class="text-slate-gray mb-6">
+                        Operamos desde nuestra sede en Quetzaltenango con capacidad de respuesta inmediata 
+                        en <strong class="text-charcoal">5 departamentos estratégicos</strong>.
+                    </p>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="stat-card">
+                            <div class="flex items-center mb-2">
+                                <div class="w-4 h-3 mr-3 rounded-sm flex flex-col">
+                                    <div class="h-1/3 bg-blue-600"></div>
+                                    <div class="h-1/3 bg-white"></div>
+                                    <div class="h-1/3 bg-red-500"></div>
+                                </div>
+                                <h4 class="font-bold text-charcoal">Quetzaltenango</h4>
+                            </div>
+                            <p class="text-sm text-slate-gray">Sede central y bodega principal</p>
+                        </div>
+                        <div class="stat-card">
+                            <div class="flex items-center mb-2">
+                                <div class="w-4 h-3 mr-3 rounded-sm flex flex-col">
+                                    <div class="h-1/3 bg-green-600"></div>
+                                    <div class="h-1/3 bg-yellow-400"></div>
+                                    <div class="h-1/3 bg-red-600"></div>
+                                </div>
+                                <h4 class="font-bold text-charcoal">San Marcos</h4>
+                            </div>
+                            <p class="text-sm text-slate-gray">Cobertura completa 48 horas</p>
+                        </div>
+                        <div class="stat-card">
+                            <div class="flex items-center mb-2">
+                                <div class="w-4 h-3 mr-3 rounded-sm flex">
+                                    <div class="w-1/4 bg-green-600"></div>
+                                    <div class="w-1/2 bg-yellow-400"></div>
+                                    <div class="w-1/4 bg-orange-500"></div>
+                                </div>
+                                <h4 class="font-bold text-charcoal">Huehuetenango</h4>
+                            </div>
+                            <p class="text-sm text-slate-gray">Red de distribución establecida</p>
+                        </div>
+                        <div class="stat-card">
+                            <div class="flex items-center mb-2">
+                                <div class="w-4 h-3 mr-3 rounded-sm flex">
+                                    <div class="w-1/3 bg-red-600"></div>
+                                    <div class="w-1/3 bg-white"></div>
+                                    <div class="w-1/3 bg-yellow-400"></div>
+                                </div>
+                                <h4 class="font-bold text-charcoal">Totonicapán</h4>
+                            </div>
+                            <p class="text-sm text-slate-gray">Entrega directa semanal</p>
+                        </div>
+                        <div class="stat-card">
+                            <div class="flex items-center mb-2">
+                                <div class="w-4 h-3 mr-3 rounded-sm flex">
+                                    <div class="w-1/3 bg-yellow-400"></div>
+                                    <div class="w-1/3 bg-white"></div>
+                                    <div class="w-1/3 bg-yellow-400"></div>
+                                </div>
+                                <h4 class="font-bold text-charcoal">Quiché</h4>
+                            </div>
+                            <p class="text-sm text-slate-gray">Proyectos especiales activos</p>
+                        </div>
+                        <div class="stat-card">
+                            <div class="flex items-center mb-2">
+                                <div class="w-4 h-3 mr-3 rounded-sm flex flex-col">
+                                    <div class="h-1/3 bg-green-600"></div>
+                                    <div class="h-1/3 bg-yellow-400"></div>
+                                    <div class="h-1/3 bg-green-600"></div>
+                                </div>
+                                <h4 class="font-bold text-charcoal">Sololá</h4>
+                            </div>
+                            <p class="text-sm text-slate-gray">Cobertura bajo demanda</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="relative flex items-end justify-center">
+                    <img 
+                        src="/images/acercaDeMaysol/cobertura.jpeg" 
+                        alt="Mapa de cobertura regional" 
+                        class="w-full h-auto rounded-xl shadow-lg"
+                        loading="lazy"
+                    >
+                    <!-- Comentario: Aquí debe ir un mapa del altiplano occidental mostrando cobertura -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección: Call to Action Institucional -->
+    <section class="cta-section py-20 lg:py-32 pb-32 lg:pb-40">
+        <div class="max-content-width-padded text-center relative z-10">
+            <h2 class="text-3xl lg:text-4xl font-bold text-white mb-8">
+                Iniciemos su Proyecto Productivo
+            </h2>
+            <p class="text-xl lg:text-2xl text-white/90 mb-12 max-w-4xl mx-auto leading-relaxed">
+                Solicite una <strong>propuesta técnica personalizada</strong> para su municipalidad u organización. 
+                Incluimos análisis de viabilidad, presupuesto detallado y cronograma de implementación.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-6 justify-center">
+                <a href="#contacto-section" class="cta-button">
+                    Solicitar Propuesta Técnica
+                </a>
+                <a href="tel:+50257276592" class="cta-button-outline">
+                    Llamar: 5727-6592
+                </a>
+            </div>
+            <p class="text-white/80 mt-8 text-sm font-semibold">
+                Respuesta garantizada en 48 horas hábiles
+            </p>
+        </div>
+    </section>
+    
+    <!-- Contact -->
+    <ContactSection />
+  </main>
+  
+  <!-- Footer -->
+  <Footer />
+  
+  <!-- WhatsApp Components -->
+  <WhatsAppModal />
+  <FloatingWhatsAppButton />
+</Layout>
