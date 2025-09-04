@@ -10,5 +10,15 @@ export default defineConfig({
   server: {
     host: '0.0.0.0',
     port: 3006
+  },
+  vite: {
+    build: {
+      sourcemap: false
+    },
+    server: {
+      fs: {
+        strict: false
+      }
+    }
   }
 });

@@ -111,9 +111,21 @@ function buildQueryString(options: FetchOptions = {}): string {
   
   if (options.filters) {
     Object.entries(options.filters).forEach(([key, value]) => {
-      if (typeof value === 'object') {
+      if (typeof value === 'object' && !Array.isArray(value)) {
         Object.entries(value).forEach(([subKey, subValue]) => {
-          params.append(`filters[${key}][${subKey}]`, String(subValue));
+          if (Array.isArray(subValue)) {
+            // Handle arrays like $in: ['value1', 'value2']
+            subValue.forEach((item, index) => {
+              params.append(`filters[${key}][${subKey}][${index}]`, String(item));
+            });
+          } else {
+            params.append(`filters[${key}][${subKey}]`, String(subValue));
+          }
+        });
+      } else if (Array.isArray(value)) {
+        // Handle direct arrays
+        value.forEach((item, index) => {
+          params.append(`filters[${key}][${index}]`, String(item));
         });
       } else {
         params.append(`filters[${key}]`, String(value));

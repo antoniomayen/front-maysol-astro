@@ -11,7 +11,9 @@
       "Read(/Users/granjasmaysol/Downloads/**)",
       "Read(/var/folders/zd/t10g5trj2w3_mcq96hp32n600000gn/T/TemporaryItems/NSIRD_screencaptureui_tTEniB/**)",
       "Read(/var/folders/zd/t10g5trj2w3_mcq96hp32n600000gn/T/TemporaryItems/NSIRD_screencaptureui_q3bVwD/**)",
-      "Read(/var/folders/zd/t10g5trj2w3_mcq96hp32n600000gn/T/TemporaryItems/NSIRD_screencaptureui_fj6ZmT/**)"
+      "Read(/var/folders/zd/t10g5trj2w3_mcq96hp32n600000gn/T/TemporaryItems/NSIRD_screencaptureui_fj6ZmT/**)",
+      "Read(/var/folders/zd/t10g5trj2w3_mcq96hp32n600000gn/T/TemporaryItems/NSIRD_screencaptureui_y8ITRa/**)",
+      "Bash(npm run dev:*)"
     ],
     "deny": [],
     "ask": []

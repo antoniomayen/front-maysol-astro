@@ -291,18 +291,155 @@
   }
 }
 
-/* Grid responsivo para productos */
+/* Layout de productos con responsive */
+.products-wrapper {
+  position: relative;
+  min-height: 200px;
+}
+
+.loading-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: none !important; /* Oculto por defecto - IMPORTANTE */
+  justify-content: center;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.95);
+  z-index: 10;
+}
+
+/* Grid responsivo para productos con transiciones */
 .products-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
   gap: 1.5rem;
-  width: 100%;
+  padding: 0 10px;
+  justify-items: start; /* Alinear cards a la izquierda */
+  opacity: 1;
+  animation: smoothFadeIn 0.4s ease-out;
+  transition: opacity 0.3s ease;
 }
 
-@media (max-width: 640px) {
+/* Limitar a 3 columnas máximo en pantallas grandes */
+@media (min-width: 1024px) {
+  .products-main-container {
+    max-width: 80%;
+    margin: 0 auto;
+    padding-right: 80px; /* Espacio adicional para el botón flotante */
+  }
+  
   .products-grid {
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-    gap: 1rem;
+    grid-template-columns: repeat(3, 1fr);
+    justify-items: start; /* Mantener alineación izquierda */
+  }
+}
+
+/* En pantallas medianas, 2 columnas */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .products-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* En móvil, 1 columna */
+@media (max-width: 767px) {
+  .products-grid {
+    grid-template-columns: 1fr;
+    padding: 0 20px;
+  }
+  
+  .products-main-container {
+    margin-bottom: 80px; /* Espacio extra en móvil para el botón flotante */
+  }
+}
+
+/* Ajustes adicionales para evitar el botón flotante */
+.products-main-container {
+  padding-bottom: 2rem;
+}
+
+/* Alinear info de resultados con las cards */
+.results-info {
+  padding: 0 10px; /* Mismo padding que products-grid */
+}
+
+@media (min-width: 1024px) {
+  .results-info {
+    padding: 0; /* Sin padding en desktop, ya está contenido */
+  }
+}
+
+/* Alinear paginación con las cards */
+.pagination-alignment {
+  padding: 0 10px; /* Mismo padding que products-grid */
+}
+
+@media (min-width: 1024px) {
+  .pagination-alignment {
+    padding: 0; /* Sin padding en desktop, ya está contenido */
+  }
+}
+
+/* Alinear selector de página con las cards - padding extra de 20px */
+.page-size-selector {
+  padding-right: 30px; /* 10px base + 20px extra = 30px total */
+}
+
+@media (min-width: 1024px) {
+  .page-size-selector {
+    padding-right: 90px; /* Solo 20px extra en desktop */
+  }
+}
+
+/* Show spinner ONLY when explicitly loading */
+.products-wrapper.loading .loading-container {
+  display: flex !important;
+}
+
+.products-wrapper.loading .products-grid {
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+
+/* Solo aplicar fade cuando está cargando */
+.products-wrapper.loading .products-grid {
+  opacity: 0.2;
+  transition: opacity 0.2s ease;
+}
+
+/* Animación suave de entrada */
+@keyframes smoothFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Aplicar animación escalonada a cada producto */
+.products-grid > * {
+  animation: productFadeIn 0.5s ease-out backwards;
+}
+
+.products-grid > *:nth-child(1) { animation-delay: 0.05s; }
+.products-grid > *:nth-child(2) { animation-delay: 0.1s; }
+.products-grid > *:nth-child(3) { animation-delay: 0.15s; }
+.products-grid > *:nth-child(4) { animation-delay: 0.2s; }
+
+@keyframes productFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
   }
 }
 

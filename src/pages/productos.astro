@@ -4,6 +4,7 @@ import NavbarPages from '../components/layout/NavbarPages.astro';
 import Footer from '../layouts/Footer.astro';
 import ContactSection from '../components/sections/ContactSection.astro';
 import ProductCard from '../components/ui/ProductCard.astro';
+import LoadingSpinner from '../components/ui/LoadingSpinner.astro';
 import WhatsAppModal from '../components/ui/WhatsAppModal.astro';
 import FloatingWhatsAppButton from '../components/ui/FloatingWhatsAppButton.astro';
 import { getProducts, type Product, categoryLabels } from '../lib/strapi';
@@ -18,18 +19,28 @@ const searchParam = url.searchParams.get('search') || '';
 
 // Parse and validate parameters
 const currentPage = Math.max(1, parseInt(pageParam));
-const pageSize = [4, 12, 24].includes(parseInt(pageSizeParam)) ? parseInt(pageSizeParam) : 4;
+const pageSize = [6, 12, 24].includes(parseInt(pageSizeParam)) ? parseInt(pageSizeParam) : 6;
 
 // Build filters
 const filters: any = {};
+
+// Handle multiple categories using $in operator for Strapi
 if (categoryParam) {
-  filters.category = { $eq: categoryParam };
+  const categories = categoryParam.split(',').filter(c => c);
+  if (categories.length === 1) {
+    filters.category = { $eq: categories[0] };
+  } else if (categories.length > 1) {
+    // Use $in operator with array for multiple categories
+    filters.category = { $in: categories };
+  }
 }
+
 if (availableParam === 'true') {
   filters.available = { $eq: true };
 } else if (availableParam === 'false') {
   filters.available = { $eq: false };
 }
+
 if (searchParam) {
   filters.name = { $containsi: searchParam };
 }
@@ -39,6 +50,9 @@ let products: Product[] = [];
 let pagination = { page: 1, pageCount: 1, total: 0 };
 
 try {
+  // Debug: log filters to see what we're sending
+  console.log('Filters being sent:', JSON.stringify(filters, null, 2));
+  
   const response = await getProducts({
     filters,
     populate: '*',
@@ -109,7 +123,6 @@ export const prerender = false;
   title="Productos - Granjas Maysol" 
   description="Catálogo completo de productos avícolas y porcinos de Granjas Maysol. Gallinas, pollos, cerdos, huevos, alimentos y accesorios de la más alta calidad."
 >
-  <link rel="stylesheet" href="/src/styles/productos.css">
   
   <NavbarPages />
   
@@ -172,16 +185,22 @@ export const prerender = false;
                 </a>
               </div>
             )}
-            {categoryParam && (
+            {categoryParam && categoryParam.split(',').filter(c => c).map(cat => (
               <div class="filter-chip">
-                <span>{categoryLabels[categoryParam] || categoryParam}</span>
-                <a href={buildPageUrl(1, { category: '' })} class="filter-chip-remove">
+                <span>{categoryLabels[cat] || cat}</span>
+                <a 
+                  href={(() => {
+                    const cats = categoryParam.split(',').filter(c => c && c !== cat);
+                    return buildPageUrl(1, { category: cats.join(',') || '' });
+                  })()}
+                  class="filter-chip-remove"
+                >
                   <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                   </svg>
                 </a>
               </div>
-            )}
+            ))}
           </div>
         )}
       </div>
@@ -207,33 +226,42 @@ export const prerender = false;
                   </button>
                 </div>
                 <div id="category-options" class="filter-options expanded">
-                  {Object.entries(categoryLabels).map(([value, label]) => (
-                    <label class="filter-option">
-                      <div class={`filter-checkbox ${categoryParam === value ? 'checked' : ''}`}></div>
-                      <span class="filter-option-label">{label}</span>
-                      <input 
-                        type="radio" 
-                        name="category" 
-                        value={value}
-                        checked={categoryParam === value}
-                        class="hidden"
-                        data-filter="category"
-                      />
-                    </label>
-                  ))}
-                  {categoryParam && (
-                    <label class="filter-option">
-                      <div class="filter-checkbox"></div>
-                      <span class="filter-option-label">Todas las categorías</span>
-                      <input 
-                        type="radio" 
-                        name="category" 
-                        value=""
-                        class="hidden"
-                        data-filter="category"
-                      />
-                    </label>
-                  )}
+                  <!-- Opción "Todas" siempre visible al inicio -->
+                  <label class="filter-option">
+                    <div class={`filter-checkbox ${!categoryParam ? 'checked' : ''}`}></div>
+                    <span class="filter-option-label font-semibold">Todas las categorías</span>
+                    <input 
+                      type="checkbox" 
+                      id="category-all"
+                      value=""
+                      checked={!categoryParam}
+                      class="hidden"
+                      data-filter="category-all"
+                    />
+                  </label>
+                  
+                  <!-- Separador visual -->
+                  <div class="border-t border-gray-200 my-2"></div>
+                  
+                  <!-- Categorías específicas con checkboxes -->
+                  {Object.entries(categoryLabels).map(([value, label]) => {
+                    const selectedCategories = categoryParam ? categoryParam.split(',') : [];
+                    const isChecked = selectedCategories.includes(value);
+                    return (
+                      <label class="filter-option">
+                        <div class={`filter-checkbox ${isChecked ? 'checked' : ''}`}></div>
+                        <span class="filter-option-label">{label}</span>
+                        <input 
+                          type="checkbox" 
+                          value={value}
+                          checked={isChecked}
+                          class="hidden"
+                          data-filter="category"
+                          data-category={value}
+                        />
+                      </label>
+                    );
+                  })}
                 </div>
               </div>
 
@@ -241,10 +269,10 @@ export const prerender = false;
           </aside>
 
           <!-- Productos -->
-          <div class="flex-1">
+          <div class="flex-1 products-main-container">
             <!-- Info de resultados -->
-            <div class="flex justify-between items-center mb-6">
-              <div class="text-sm text-gray-600" style="padding-left: 10px;">
+            <div class="flex justify-between items-center mb-6 results-info">
+              <div class="text-sm text-gray-600">
                 {products.length > 0 ? (
                   <span>
                     Mostrando {((currentPage - 1) * pageSize + 1)} - {Math.min(currentPage * pageSize, pagination.total)} de {pagination.total} productos
@@ -255,14 +283,14 @@ export const prerender = false;
               </div>
               
               <!-- Selector de cantidad por página -->
-              <div class="flex items-center gap-2">
+              <div class="flex items-center gap-2 page-size-selector">
                 <label for="page-size" class="text-sm text-gray-600">Mostrar:</label>
                 <select 
                   id="page-size"
                   class="select select-bordered select-sm bg-white"
                   value={pageSize}
                 >
-                  <option value="4" selected={pageSize === 4}>4</option>
+                  <option value="6" selected={pageSize === 6}>6</option>
                   <option value="12" selected={pageSize === 12}>12</option>
                   <option value="24" selected={pageSize === 24}>24</option>
                 </select>
@@ -271,16 +299,24 @@ export const prerender = false;
 
             {products.length > 0 ? (
               <>
-                <!-- Grid de productos -->
-                <div class="products-grid mb-12">
-                  {products.map((product) => (
-                    <ProductCard product={product} />
-                  ))}
+                <!-- Contenedor principal -->
+                <div class="products-wrapper mb-12" id="products-container">
+                  <!-- Loading spinner (se oculta cuando los productos cargan) -->
+                  <div class="loading-container hidden">
+                    <LoadingSpinner size="small" centered={true} />
+                  </div>
+                  
+                  <!-- Grid de productos -->
+                  <div class="products-grid">
+                    {products.map((product) => (
+                      <ProductCard product={product} />
+                    ))}
+                  </div>
                 </div>
 
                 <!-- Paginación -->
                 {pagination.pageCount > 1 && (
-                  <div class="pagination-container">
+                  <div class="pagination-container pagination-alignment">
                     <a 
                       href={currentPage > 1 ? buildPageUrl(currentPage - 1) : '#'}
                       class={`pagination-button pagination-arrow ${currentPage <= 1 ? 'disabled' : ''}`}
@@ -366,7 +402,7 @@ export const prerender = false;
 </Layout>
 
 <style>
-  @import '/src/styles/productos.css';
+  @import '../styles/productos.css';
 </style>
 
 <script>
@@ -374,6 +410,37 @@ export const prerender = false;
   const searchInput = document.getElementById('search-input') as HTMLInputElement;
   const searchButton = document.getElementById('search-button');
   const clearButton = document.getElementById('clear-search');
+
+  // Función para mostrar skeleton loader con delay SOLO durante navegación
+  let loaderTimeout: number | null = null;
+  let isNavigating = false;
+  
+  const showSkeletonLoader = () => {
+    // Marcar que estamos navegando
+    isNavigating = true;
+    
+    // Solo mostrar el loader si la navegación tarda más de 200ms
+    loaderTimeout = window.setTimeout(() => {
+      const productsContainer = document.getElementById('products-container');
+      if (productsContainer && isNavigating) {
+        productsContainer.classList.add('loading');
+      }
+    }, 200); // 200ms delay antes de mostrar el loader
+  };
+  
+  // Cancelar el loader si la página carga rápido
+  const cancelSkeletonLoader = () => {
+    isNavigating = false;
+    if (loaderTimeout) {
+      window.clearTimeout(loaderTimeout);
+      loaderTimeout = null;
+    }
+    // Asegurar que el loader esté oculto
+    const productsContainer = document.getElementById('products-container');
+    if (productsContainer) {
+      productsContainer.classList.remove('loading');
+    }
+  };
 
   const performSearch = () => {
     const searchValue = searchInput?.value.trim();
@@ -385,6 +452,7 @@ export const prerender = false;
       url.searchParams.delete('search');
     }
     url.searchParams.set('page', '1');
+    showSkeletonLoader();
     window.location.href = url.toString();
   };
 
@@ -399,6 +467,7 @@ export const prerender = false;
     const url = new URL(window.location.href);
     url.searchParams.delete('search');
     url.searchParams.set('page', '1');
+    showSkeletonLoader();
     window.location.href = url.toString();
   });
 
@@ -409,24 +478,53 @@ export const prerender = false;
     const url = new URL(window.location.href);
     url.searchParams.set('size', select.value);
     url.searchParams.set('page', '1');
+    showSkeletonLoader();
     window.location.href = url.toString();
   });
 
-  // Filtros
-  const filterInputs = document.querySelectorAll('input[data-filter]');
-  filterInputs.forEach(input => {
-    input.addEventListener('change', (e) => {
+  // Filtros con checkboxes para múltiple selección
+  const categoryCheckboxes = document.querySelectorAll('input[data-filter="category"]');
+  const allCategoriesCheckbox = document.getElementById('category-all') as HTMLInputElement;
+  
+  // Manejar checkbox "Todas las categorías"
+  allCategoriesCheckbox?.addEventListener('change', () => {
+    const url = new URL(window.location.href);
+    url.searchParams.delete('category');
+    url.searchParams.set('page', '1');
+    showSkeletonLoader();
+    window.location.href = url.toString();
+  });
+  
+  // Manejar checkboxes de categorías individuales
+  categoryCheckboxes.forEach(checkbox => {
+    checkbox.addEventListener('change', (e) => {
       const target = e.target as HTMLInputElement;
-      const filterType = target.dataset.filter;
       const value = target.value;
       const url = new URL(window.location.href);
+      const currentCategories = url.searchParams.get('category')?.split(',').filter(c => c) || [];
       
-      if (value) {
-        url.searchParams.set(filterType!, value);
+      if (target.checked) {
+        // Agregar categoría
+        if (!currentCategories.includes(value)) {
+          currentCategories.push(value);
+        }
       } else {
-        url.searchParams.delete(filterType!);
+        // Quitar categoría
+        const index = currentCategories.indexOf(value);
+        if (index > -1) {
+          currentCategories.splice(index, 1);
+        }
       }
+      
+      // Actualizar URL
+      if (currentCategories.length > 0) {
+        url.searchParams.set('category', currentCategories.join(','));
+      } else {
+        url.searchParams.delete('category');
+      }
+      
       url.searchParams.set('page', '1');
+      showSkeletonLoader();
       window.location.href = url.toString();
     });
   });
@@ -458,5 +556,61 @@ export const prerender = false;
   // Mobile filter modal (placeholder para futura implementación)
   document.getElementById('mobile-filter-button')?.addEventListener('click', () => {
     alert('Los filtros móviles se mostrarán aquí. Por ahora, usa la versión de escritorio.');
+  });
+
+  // Agregar skeleton loader a los links de paginación
+  const paginationLinks = document.querySelectorAll('.pagination-button:not(.disabled)');
+  paginationLinks.forEach(link => {
+    link.addEventListener('click', (e) => {
+      const href = (e.currentTarget as HTMLAnchorElement).href;
+      if (href && !href.includes('#')) {
+        e.preventDefault();
+        showSkeletonLoader();
+        setTimeout(() => {
+          window.location.href = href;
+        }, 50); // Pequeño delay para asegurar que se muestre el loader
+      }
+    });
+  });
+
+  // Agregar skeleton loader a los chips de filtros activos
+  const filterChipLinks = document.querySelectorAll('.filter-chip-remove');
+  filterChipLinks.forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const href = (e.currentTarget as HTMLAnchorElement).href;
+      showSkeletonLoader();
+      setTimeout(() => {
+        window.location.href = href;
+      }, 50);
+    });
+  });
+
+  // IMPORTANTE: Asegurar que el loader NO aparezca al cargar la página inicialmente
+  // Solo debe aparecer cuando el usuario interactúa con filtros/navegación
+  document.addEventListener('DOMContentLoaded', () => {
+    // Cancelar cualquier loader y asegurar que esté oculto
+    cancelSkeletonLoader();
+    
+    // Forzar la eliminación de la clase loading
+    const productsContainer = document.getElementById('products-container');
+    if (productsContainer) {
+      productsContainer.classList.remove('loading');
+      // Asegurar que los productos sean visibles
+      const productsGrid = productsContainer.querySelector('.products-grid');
+      if (productsGrid) {
+        (productsGrid as HTMLElement).style.opacity = '1';
+      }
+    }
+  });
+  
+  // Limpiar al salir de la página
+  window.addEventListener('beforeunload', () => {
+    cancelSkeletonLoader();
+  });
+  
+  // También asegurar al cargar la ventana (por si acaso)
+  window.addEventListener('load', () => {
+    cancelSkeletonLoader();
   });
 </script>
